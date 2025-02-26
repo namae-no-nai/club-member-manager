@@ -1,0 +1,51 @@
+<h1 class="text-3xl font-bold text-red-600">Create Event</h1>
+
+<%= form_with(model: @event, url: members_path, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md mt-4 max-w-lg mx-auto") do |form| %>
+  <% if @event.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+      <strong class="font-bold"><%= pluralize(@event.errors.count, "error") %> prevented this event from being saved:</strong>
+      <ul class="mt-2">
+        <% @event.errors.full_messages.each do |message| %>
+          <li class="text-sm"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-4">
+    <div>
+      <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Select a partner", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :weapon_id, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.collection_select :weapon_id, @weapons, :id, :caliber, prompt: "Select a weapon", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :activity, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.select :activity, options_for_select(["training", "competition"], @event.activity), prompt: "Select an activity", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :date, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.date_field :date, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :ammo_amount, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field :ammo_amount, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :sheet, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field :sheet, value: 1, readonly: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700" %>
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-between">
+    <%= form.submit "Create Event", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+    <%= link_to 'Back', members_path, class: "text-gray-700 hover:underline" %>
+  </div>
+<% end %>
