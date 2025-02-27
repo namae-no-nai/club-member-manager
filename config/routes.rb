@@ -3,4 +3,5 @@ Rails.application.routes.draw do
 
   root "members#index"
   resources :members
+  get '/pdfs/generate', to: 'pdfs#generate'
 end

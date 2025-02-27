@@ -1,11 +1,11 @@
 class Event < ApplicationRecord
-	belongs_to :partner
+  belongs_to :partner
   belongs_to :weapon
 
   validates :partner_id, presence: true
   validates :weapon_id, presence: true
   validates :activity, presence: true,
-                       inclusion: { in: ["training", "competition"],
+                       inclusion: { in: [ "training", "competition" ],
                        message: "%{value} is not a valid activity" }
   validates :date, presence: true
   validates :ammo_amount, presence: true,
