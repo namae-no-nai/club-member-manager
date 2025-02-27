@@ -5,15 +5,15 @@ class MembersController < ApplicationController
 
   def new
     @event = Event.new
-    @partners = Partner.all # assuming you have a Partner model
-    @weapons = Weapon.all # assuming you have a Weapon model
+    @partners = Partner.all
+    @weapons = Weapon.all
   end
 
   def create
     @event = Event.new(event_params)
 
     if @event.save
-      redirect_to @event, notice: 'Event was successfully created.'
+      redirect_to @event, notice: 'Registro criado com sucesso.'
     else
       @partners = Partner.all
       @weapons = Weapon.all
