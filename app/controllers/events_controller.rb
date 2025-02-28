@@ -1,4 +1,4 @@
-class MembersController < ApplicationController
+class EventsController < ApplicationController
   def index
     @text = "ainda sei programar"
   end
@@ -10,6 +10,7 @@ class MembersController < ApplicationController
   end
 
   def create
+    debugger
     @event = Event.new(event_params)
 
     if @event.save
