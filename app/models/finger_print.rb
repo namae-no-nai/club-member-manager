@@ -1,6 +1,5 @@
 class FingerPrint < ApplicationRecord
   belongs_to :partner
 
-  validates :credentials, presence: true
-  validates :description, presence: true
+  validates :credentials, :description, presence: true
 end

@@ -6,8 +6,8 @@ class CreatePartners < ActiveRecord::Migration[8.0]
       t.string :registry_certificate
       t.date :registry_certificate_expiration_date
       t.text :address
-      t.string :afiliation_number
-      t.date :first_afiliation_date
+      t.string :filiation_number
+      t.date :first_filiation_date
 
       t.timestamps
     end

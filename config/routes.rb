@@ -3,5 +3,5 @@ Rails.application.routes.draw do
 
   root "events#index"
   resources :events
-  get "/pdfs/generate", to: "pdfs#generate"
+  get "/pdfs/generate", to: "pdfs#document"
 end

@@ -36,8 +36,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_26_011424) do
     t.string "registry_certificate"
     t.date "registry_certificate_expiration_date"
     t.text "address"
-    t.string "afiliation_number"
-    t.date "first_afiliation_date"
+    t.string "filiation_number"
+    t.date "first_filiation_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

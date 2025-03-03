@@ -1,4 +1,3 @@
-
 <div class="grid grid-cols-1 gap-4">
   <h1 class="text-3xl font-bold text-red-600">Create Event</h1>
 </div>
@@ -17,7 +16,7 @@
   <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
     <div>
       <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Select a partner", name: "weapons[]weapon[name]", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+      <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Select a partner", class: "form-select w-full mt-1 p-2 border rounded-md" %>
     </div>
 
     <div>
@@ -33,38 +32,44 @@
     <template id='weapon-wrapper-template'>
       <div class="weapon-wrapper">
         <div>
-          <%= form.label :activity, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.select :activity, options_for_select(["training", "competition"], @event.activity), prompt: "Select an activity", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700" for="activity">Activity</label>
+          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Enter activity">
         </div>
 
         <div>
-          <%= form.label :weapon_id, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :weapon_id, @weapons, :id, :caliber, prompt: "Select a weapon", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700">Weapon</label>
+          <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md">
+            <option value="">Select a weapon</option>
+            <%= options_for_select(@weapons.map { |weapon| [weapon.caliber, weapon.id] }) %>
+          </select>
         </div>
 
         <div>
-          <%= form.label :ammo_amount, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.number_field :ammo_amount, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700">Ammo Amount</label>
+          <input type="number" name="practices[][ammo_amount]" class="form-input w-full mt-1 p-2 border rounded-md">
         </div>
-      <button data-action="nested-form#remove">Remover</button>
+        <button data-action="nested-form#remove">Remover</button>
       </div>
     </template>
 
     <div id="weapons">
       <div class="weapon-wrapper">
         <div>
-          <%= form.label :activity, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.select :activity, options_for_select(["training", "competition"], @event.activity), prompt: "Select an activity", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700" for="activity">Activity</label>
+          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Enter activity">
         </div>
 
         <div>
-          <%= form.label :weapon_id, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :weapon_id, @weapons, :id, :caliber, prompt: "Select a weapon", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700">Weapon</label>
+          <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md">
+            <option value="">Select a weapon</option>
+            <%= options_for_select(@weapons.map { |weapon| [weapon.caliber, weapon.id] }) %>
+          </select>
         </div>
 
         <div>
-          <%= form.label :ammo_amount, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.number_field :ammo_amount, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <label class="block text-sm font-medium text-gray-700">Ammo Amount</label>
+          <input type="number" name="practices[][ammo_amount]" class="form-input w-full mt-1 p-2 border rounded-md">
         </div>
       </div>
     </div>
