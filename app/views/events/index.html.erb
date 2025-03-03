@@ -9,8 +9,8 @@
     </div>
   </div>
   <div class="mt-6">
-    <h2 class="text-xl font-bold text-center">ANEXO E</h2>
-    <h1 class="text-2xl font-bold text-center">COMPROVANTE DE PARTICIPAÇÕES EM TREINAMENTOS E/OU COMPETIÇÕES DE TIRO (HABITUALIDADE)</h1>
+    <h2 class="text-xlfont-bold text-center">ANEXO E</h2>
+    <h1 class="text-2xlfont-bold text-center">COMPROVANTE DE PARTICIPAÇÕES EM TREINAMENTOS E/OU COMPETIÇÕES DE TIRO (HABITUALIDADE)</h1>
     <p class="text-sm text-center text-gray-600">(Art. 35 do Decreto nº 11.615/2023)</p>
   </div>
   <div class="mt-4 border-t border-gray-300 pt-4">
@@ -19,15 +19,15 @@
   <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
     <tbody>
       <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Nome:</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">CNPJ:</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Nome:</strong> Clube de Tiro Interarmas</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>CNPJ:</strong> 11.371.357-0001</h5></td>
       </tr>
       <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Certificado de Registro:</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Data:</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Certificado de Registro:</strong> 66098</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Data:</strong> 23/02/2030</h5></td>
       </tr>
       <tr>
-        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5 class=" font-bold">Endereço:</h5></td>
+        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5><strong>Endereço:</strong> Alameda Nothmann, nº 1209 Santa Cecilia – São Paulo/SP CEP 01216-001</h5></td>
       </tr>
     </tbody>
   </table>
@@ -37,94 +37,77 @@
   <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
     <tbody>
       <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Nome:</h5></td>
-        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5 class=" font-bold">CPF:</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Nome:</strong> <%= @partner.full_name%></h5></td>
+        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5><strong>CPF:</strong> <%= @partner.cpf %></h5></td>
       </tr>
       <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Certificado de Registro:</h5></td>
-        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5 class=" font-bold">Data:</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Certificado de Registro:</strong> <%= @partner.registry_certificate%></h5></td>
+        <td class="border border-gray-400 px-2 py-1" colspan="2"><h5><strong>Data:</strong> <%= I18n.l(@partner.registry_certificate_expiration_date) %></h5></td>
       </tr>
       <tr>
-        <td class="border border-gray-400 px-2 py-1" colspan="3"><h5 class=" font-bold">Endereço:</h5></td>
+        <td class="border border-gray-400 px-2 py-1" colspan="3"><h5><strong>Endereço:</strong> <%= @partner.address %></h5></td>
       </tr>
       <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Filiação a entidade de tiro</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Código:</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold">Cadastro:</h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Filiação a entidade de tiro</strong></h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Código:</strong> <%= @partner.filiation_number%></h5></td>
+        <td class="border border-gray-400 px-2 py-1"><h5><strong>Cadastro:</strong> <%= I18n.l(@partner.first_filiation_date) %></h5></td>
       </tr>
     </tbody>
   </table>
+
   <div class="mt-4 border-t border-gray-300 pt-4">
     <h3 class="font-semibold text-center">Dados da Habitualidade</h3>
   </div>
-  <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
-    <thead>
-      <tr class="bg-gray-200">
-        <th class="border border-gray-400 px-2 py-1" colspan=5><h5 class=" font-bold text-center">Tipo do calibre - arma</h5></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Ordem</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Data - Hora</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">SIGMA</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Qtd. Munição</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Tipo de Evento Treinamento ou Competição</h5></td>
-      </tr>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="mt-4 border-t border-gray-300 pt-4">
-    <h3 class="font-semibold text-center">Dados da Habitualidade</h3>
-  </div>
-  <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
-    <thead>
-      <tr class="bg-gray-200">
-        <th class="border border-gray-400 px-2 py-1" colspan=5><h5 class=" font-bold text-center">Tipo do calibre - arma</h5></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Ordem</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Data - Hora</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">SIGMA</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Qtd. Munição</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Tipo de Evento Treinamento ou Competição</h5></td>
-      </tr>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-      </tr>
-    </tbody>
-  </table>
-  <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
-    <thead>
-      <tr>
-        <th class="border border-gray-400 px-2 py-1" colspan=5><h4 class=" font-bold text-center">Registro da Habitualidade</h4></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Sistema</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Nº Reg.</h5></td>
-        <td class="border border-gray-400 px-2 py-1"><h5 class=" font-bold text-center">Data de Lançamento</h5></td>
-      </tr>
-      <tr>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-        <td class="border border-gray-400 px-2 py-1"></td>
-      </tr>
-    </tbody>
-  </table>
+
+  <% @events.each do |weapon, events| %>
+    <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-400 px-2 py-1" colspan=5><h5 class="font-bold text-center"><%= weapon.caliber %></h5></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Ordem</h5></td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Data - Hora</h5> </td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">SIGMA</h5></td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Qtd. Munição</h5></td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Tipo de Evento Treinamento ou Competição</h5></td>
+        </tr>
+        <% events.each_with_index do |event, index| %>
+          <tr>
+            <td class="border border-gray-400 px-2 py-1"><%= index + 1 %></td>
+            <td class="border border-gray-400 px-2 py-1"><%= event.date %></td>
+            <td class="border border-gray-400 px-2 py-1"><%= weapon.sigma %></td>
+            <td class="border border-gray-400 px-2 py-1"><%= event.ammo_amount %></td>
+            <td class="border border-gray-400 px-2 py-1"><%= event.activity %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
+      <thead>
+        <tr>
+          <th class="border border-gray-400 px-2 py-1" colspan=5><h4 class="font-bold text-center">Registro da Habitualidade</h4></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Sistema</h5></td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Nº Reg.</h5></td>
+          <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Data de Lançamento</h5></td>
+        </tr>
+        <% events.each do |event| %>
+        <tr>
+          <td class="border border-gray-400 px-2 py-1"> Clube Member Management</td>
+          <td class="border border-gray-400 px-2 py-1"></td>
+          <td class="border border-gray-400 px-2 py-1"><%= event.date %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
   <p class="text-sm text-center mt-3">São Paulo, dia de mes de ano</p>
   <p class="text-sm text-center mt-3">Nome do presidente</p>
   <p class="text-sm text-center mt-3">Presidente</p>

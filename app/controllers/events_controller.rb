@@ -1,6 +1,11 @@
 class EventsController < ApplicationController
   def index
-    @text = "ainda sei programar"
+    @partner = Partner.last
+    start_date = 1.year.ago.to_date
+    end_date = Date.today
+    @events= Event.includes(:weapon).where(partner_id: @partner.id, date: start_date..end_date)
+     .order(date: :desc)
+     .group_by(&:weapon)
   end
 
   def new

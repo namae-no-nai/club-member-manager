@@ -2,15 +2,16 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-		console.log("TEu cu")
+		this.weapons = document.getElementById("weapons")
   }
 
 	add(event) {
 		event.preventDefault()
+		debugger
 
 		const template = document.getElementById("weapon-wrapper-template")
 		const wrapper = template.innerHTML
-		document.getElementById("weapons").insertAdjacentHTML('beforebegin', wrapper)
+		this.weapons.appendChild(wrapper)
 	}
 
 	remove(event) {

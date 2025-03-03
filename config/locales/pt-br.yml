@@ -10,8 +10,6 @@ pt-BR:
         date: "Data"
         ammo_amount: "Quantidade de Munição"
         sheet: "Folha"
-        partner_id:
-          blank: "Parceiro não pode estar em branco"
         weapon_id:
           blank: "Arma não pode estar em branco"
         activity:

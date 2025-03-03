@@ -16,7 +16,7 @@
   <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
     <div>
       <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Select a partner", class: "form-select w-full mt-1 p-2 border rounded-md" %>
+      <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Selecione um atirador", class: "form-select w-full mt-1 p-2 border rounded-md" %>
     </div>
 
     <%= form.hidden_field :date, value: Date.today %>
@@ -72,7 +72,6 @@
         <button data-action="nested-form#remove">Remover</button>
       </div>
     </template>
-
     <button data-action="nested-form#add">Adicionar outra atividade</button>
   </div>
 
