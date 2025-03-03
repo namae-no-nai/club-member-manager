@@ -19,10 +19,8 @@
       <%= form.collection_select :partner_id, @partners, :id, :full_name, prompt: "Select a partner", class: "form-select w-full mt-1 p-2 border rounded-md" %>
     </div>
 
-    <div>
-      <%= form.label :date, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.date_field :date, class: "form-input w-full mt-1 p-2 border rounded-md" %>
-    </div>
+    <%= form.hidden_field :date, value: Date.today %>
+
 
     <div>
       <%= form.label :sheet, class: "block text-sm font-medium text-gray-700" %>
