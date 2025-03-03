@@ -23,59 +23,61 @@
 
 
     <div>
-      <%= form.label :sheet, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.label :sheet,'Folha', class: "block text-sm font-medium text-gray-700" %>
       <%= form.number_field :sheet, value: 1, readonly: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700" %>
     </div>
 
-    <template id='weapon-wrapper-template'>
+    <div id="weapons">
       <div class="weapon-wrapper">
         <div>
-          <label class="block text-sm font-medium text-gray-700" for="activity">Activity</label>
-          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Enter activity">
+          <label class="block text-sm font-medium text-gray-700" for="activity">Treino ou Campeonato</label>
+          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Insira a atividade">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Weapon</label>
+          <label class="block text-sm font-medium text-gray-700">Arma</label>
           <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md">
-            <option value="">Select a weapon</option>
+            <option value="">Selcione a Arma</option>
             <%= options_for_select(@weapons.map { |weapon| [weapon.caliber, weapon.id] }) %>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700">Ammo Amount</label>
+          <label class="block text-sm font-medium text-gray-700">Quantidade de munição</label>
+          <input type="number" name="practices[][ammo_amount]" class="form-input w-full mt-1 p-2 border rounded-md">
+        </div>
+      </div>
+    </div>
+
+
+    <template id='weapon-wrapper-template'>
+      <div class="weapon-wrapper">
+        <div>
+          <label class="block text-sm font-medium text-gray-700" for="activity">Treino ou Campeonato</label>
+          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Insira a atividade">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Arma</label>
+          <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md">
+            <option value="">Selcione a Arma</option>
+            <%= options_for_select(@weapons.map { |weapon| [weapon.caliber, weapon.id] }) %>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Quantidade de munição</label>
           <input type="number" name="practices[][ammo_amount]" class="form-input w-full mt-1 p-2 border rounded-md">
         </div>
         <button data-action="nested-form#remove">Remover</button>
       </div>
     </template>
 
-    <div id="weapons">
-      <div class="weapon-wrapper">
-        <div>
-          <label class="block text-sm font-medium text-gray-700" for="activity">Activity</label>
-          <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Enter activity">
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Weapon</label>
-          <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md">
-            <option value="">Select a weapon</option>
-            <%= options_for_select(@weapons.map { |weapon| [weapon.caliber, weapon.id] }) %>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Ammo Amount</label>
-          <input type="number" name="practices[][ammo_amount]" class="form-input w-full mt-1 p-2 border rounded-md">
-        </div>
-      </div>
-    </div>
-    <button data-action="nested-form#add">Adicionar</button>
+    <button data-action="nested-form#add">Adicionar outra atividade</button>
   </div>
 
   <div class="mt-6 flex justify-between">
-    <%= form.submit "Create Event", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
-    <%= link_to 'Back', events_path, class: "text-gray-700 hover:underline" %>
+    <%= form.submit "Registrar a Habitualidade", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+    <%= link_to 'Voltar', events_path, class: "text-gray-700 hover:underline" %>
   </div>
 <% end %>

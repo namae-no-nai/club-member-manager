@@ -9,7 +9,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "jbuilder"
-
+gem 'faker'
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
