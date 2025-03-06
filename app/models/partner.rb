@@ -4,7 +4,11 @@ class Partner < ApplicationRecord
             :filiation_number, :first_filiation_date,
             presence: true
   validates :cpf, uniqueness: true
-
+  validate :cpf_must_be_valid
   has_many :events
   has_many :finger_prints
+
+  private def cpf_must_be_valid
+    errors.add(:cpf, 'is invalid') unless CPF.valid?(cpf)
+  end
 end

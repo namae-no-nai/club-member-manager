@@ -9,7 +9,8 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "jbuilder"
-gem 'faker'
+gem "cpf_cnpj"
+gem 'webauthn'
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
@@ -38,6 +39,7 @@ group :development do
 end
 
 group :test do
+  gem "faker"
   gem "capybara"
   gem "selenium-webdriver"
 end

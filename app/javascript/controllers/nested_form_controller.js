@@ -7,7 +7,6 @@ export default class extends Controller {
 	add(event) {
 		event.preventDefault()
 
-
 		const template = document.getElementById("weapon-wrapper-template")
 		const wrapper = template.innerHTML
 		document.getElementById("weapons").insertAdjacentHTML('afterend', wrapper)

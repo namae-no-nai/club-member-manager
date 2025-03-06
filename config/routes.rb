@@ -3,6 +3,6 @@ Rails.application.routes.draw do
 
   root "events#index"
   resources :events
-  resource :partners, only: [:new, :create]
+  resource :partners, only: [ :new, :create ]
   get "/pdfs/generate", to: "pdfs#document"
 end
