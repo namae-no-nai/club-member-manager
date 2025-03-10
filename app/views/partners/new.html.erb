@@ -1,7 +1,9 @@
 <div class="grid grid-cols-1 gap-4">
   <h1 class="text-3xl font-bold text-red-600">Create partner</h1>
 </div>
-<%= form_with(model: @partner, url: partners_path, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md mt-4 max-w-lg mx-auto") do |form| %>
+
+<div data-controller="credentials">
+  <%= form_with(model: @partner, url: partners_path, local: true, data: {action:"ajax:success->credentials#create ajax:error->credentials#error"}, class: "bg-gray-100 p-6 rounded-lg shadow-md mt-4 max-w-lg mx-auto") do |form| %>
   <% if @partner.errors.any? %>
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
       <strong class="font-bold"><%= pluralize(@partner.errors.count, "error") %> prevented this event from being saved:</strong>
@@ -51,4 +53,5 @@
     <%= form.submit "Registrar a Habitualidade", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
     <%= link_to 'Voltar', partners_path, class: "text-gray-700 hover:underline" %>
   </div>
-<% end %>
+  <% end %>
+</div>

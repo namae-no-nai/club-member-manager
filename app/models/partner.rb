@@ -6,9 +6,15 @@ class Partner < ApplicationRecord
   validates :cpf, uniqueness: true
   validate :cpf_must_be_valid
   has_many :events
-  has_many :finger_prints
+  has_many :credentials
 
-  private def cpf_must_be_valid
+  after_initialize do
+    self.webauthn_id ||= WebAuthn.generate_user_id
+  end
+
+  private
+
+  def cpf_must_be_valid
     errors.add(:cpf, 'is invalid') unless CPF.valid?(cpf)
   end
 end

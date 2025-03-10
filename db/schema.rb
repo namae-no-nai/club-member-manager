@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_26_011424) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
+  create_table "credentials", force: :cascade do |t|
+    t.string "webauthn_id"
+    t.string "public_key"
+    t.integer "sign_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "partner_id", null: false
+    t.index ["partner_id"], name: "index_credentials_on_partner_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.integer "partner_id"
     t.integer "weapon_id"
@@ -40,6 +50,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_26_011424) do
     t.date "first_filiation_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "webauthn_id"
   end
 
   create_table "weapons", force: :cascade do |t|
@@ -49,4 +60,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_26_011424) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "credentials", "partners"
 end
