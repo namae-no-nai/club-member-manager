@@ -14,7 +14,7 @@ class PartnersController < ApplicationController
         user: { id: @partner.webauthn_id, name: @partner.full_name },
         exclude: @partner.credentials.map { |c| c.webauthn_id }
       )
-      session[:current_registration] = { 
+      session[:current_registration] = {
                                          challenge: create_options.challenge,
                                          attributes: partner_params
                                         }
