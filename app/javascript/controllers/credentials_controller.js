@@ -6,10 +6,6 @@ import { MDCTextField } from '@material/textfield';
 export default class extends Controller {
   static targets = ["usernameField"]
 
-  connect(){
-    console.log('AI mEU Caralho')
-  }
-
   create(event) {
     var [data, status, xhr] = event.detail;
     console.log(data);
@@ -17,7 +13,6 @@ export default class extends Controller {
 
     // Registration
     if (credentialOptions["user"]) {
-      debugger
       var credential_nickname = "teste" // event.target.querySelector("input[name='registration[nickname]']").value;
       var callback_url = `/partners/register?credential_nickname=${credential_nickname}`
 
