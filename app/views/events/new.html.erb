@@ -38,7 +38,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700">Arma</label>
-              <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md" data-enhanced-form-target="select2">
+              <select name="practices[][weapon_id]" class="form-select w-full mt-1 p-2 border rounded-md select2">
                 <option value="">Selecione a Arma</option>
                 <%= options_for_select(@weapons.map { |weapon| [ weapon.friendly_name, weapon.id ] }) %>
               </select>

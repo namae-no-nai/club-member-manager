@@ -4,6 +4,8 @@
 import "controllers"
 import "credential"
 import "messenger"
+import 'jquery'
+import 'select2'
 import Rails from "@rails/ujs";
 
 Rails.start();

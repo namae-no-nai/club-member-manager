@@ -15,5 +15,5 @@ pin "@github/webauthn-json", to: "@github--webauthn-json.js" # @2.1.1
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin "credential"
 pin "messenger"
-pin "select2" # @4.1.0
-pin "jquery" # @3.7.1
+pin "select2", to: "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" # @4.1.0
+pin "jquery", to: "https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.js"
