@@ -10,17 +10,17 @@
 
       <div>
         <%= f.label :start_date, "Data inicial", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :start_date, required: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
       </div>
 
       <div>
         <%= f.label :end_date, "Data Final", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :end_date, required: true, class: "form-input border-gray-300 rounded-md p-2" %>
+        <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, class: "form-input border-gray-300 rounded-md p-2" %>
       </div>
 
       <div class="mt-6 flex justify-between">
         <%= f.submit "Filtrar e gerar PDF", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
-        <%= link_to 'Voltar', partners_path, class: "text-gray-700 hover:underline" %>
+        <%= link_to 'Voltar', root_path, class: "text-gray-700 hover:underline" %>
       </div>
     <% end %>
   </div>
