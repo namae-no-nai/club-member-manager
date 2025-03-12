@@ -8,6 +8,17 @@ class EventsController < ApplicationController
      .group_by(&:weapon)
   end
 
+  def filter;end
+
+  def generate_pdf
+    @partner = Partner.find_by(registry_certificate: params[:registry_certificate])
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+    @events= Event.includes(:weapon).where(partner_id: @partner.id, date: start_date..end_date)
+     .order(date: :desc)
+     .group_by(&:weapon)
+  end
+
   def new
     @event = Event.new
     @partners = Partner.all
@@ -37,7 +48,7 @@ class EventsController < ApplicationController
     end
 
     flash[:notice] = "Registros criados com sucesso."
-    redirect_to @events.first || events_path
+    redirect_to root_path
   end
 
   private

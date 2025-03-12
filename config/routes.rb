@@ -2,8 +2,13 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "events#index"
-  resources :events
-  resource :partners, only: [ :new, :create ] do
+  resources :events, only: %i[ index new create ] do
+    collection do
+      get :filter
+      get :generate_pdf
+    end
+  end
+  resource :partners, only: %i[ new create ] do
     collection do
       post :register
     end
