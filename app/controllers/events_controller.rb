@@ -7,21 +7,19 @@ class EventsController < ApplicationController
     @partner = Partner.find_by(registry_certificate: params[:registry_certificate])
     start_date = params[:start_date]
     end_date = params[:end_date]
-    @events= Event.includes(:weapon).where(partner_id: @partner.id, date: start_date..end_date)
-     .order(date: :desc)
-     .group_by(&:weapon)
+    @events = Event.includes(:weapon).where(partner_id: @partner.id, date: start_date..end_date)
+                    .order(date: :desc)
+                    .group_by(&:weapon)
   end
 
   def new
+    if older_practice
+      @partners = Partner.all
+    else
+      @partners = Partner.find(params[:partner_id])
+    end
+    @older_practice = older_practice
     @event = Event.new
-    @partners = Partner.all
-    @weapons = Weapon.all
-  end
-
-  def register
-    debugger
-    @event = Event.new
-    @partners = Partner.find(params[:partner_id])
     @weapons = Weapon.all
   end
 
@@ -41,8 +39,12 @@ class EventsController < ApplicationController
 
   private
 
+  def older_practice
+    params[:older_practice].present?
+  end
+
   def practices_params
-    params.permit(practices:[:weapon_id, :activity, :ammo_amount ])[:practices]
+    params.permit(practices: [ :weapon_id, :activity, :ammo_amount ])[:practices]
   end
 
   def event_params

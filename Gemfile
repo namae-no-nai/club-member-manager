@@ -10,7 +10,7 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "jbuilder"
 gem "cpf_cnpj"
-gem 'webauthn'
+gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 

@@ -19,6 +19,6 @@ class Partner < ApplicationRecord
   private
 
   def cpf_must_be_valid
-    errors.add(:cpf, 'is invalid') unless CPF.valid?(cpf)
+    errors.add(:cpf, "is invalid") unless CPF.valid?(cpf)
   end
 end

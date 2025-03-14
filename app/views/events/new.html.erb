@@ -15,19 +15,26 @@
           </ul>
         </div>
       <% end %>
-
       <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
-        <div>
-          <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
-        </div>
+        <%if @older_practice %>
+          <div>
+            <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
+          </div>
+        
+          <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partners_path(older_practice: true), class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
+        <% else %>
+          <%= form.hidden_field :partner_id, value: @partner_id %>
+        <% end %>
 
-        <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partners_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
-
-        <div>
-          <%= form.label :date,'Data da pratica', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
-        </div>
+        <%if @older_practice %>
+          <div>
+            <%= form.label :date,'Data da pratica', class: "block text-sm font-medium text-gray-700" %>
+            <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          </div>
+        <% else %>
+          <%= form.hidden_field :date, value: Date.today %>
+        <% end %>
 
         <div id="weapons">
           <div class="weapon-wrapper grid grid-cols-1 gap-4">

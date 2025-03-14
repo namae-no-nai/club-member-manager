@@ -16,7 +16,7 @@ module ClubMemberManager
     config.i18n.default_locale = :'pt-BR'
     config.i18n.fallbacks = true
 
-    config.time_zone = 'Brasilia'
+    config.time_zone = "Brasilia"
     config.active_record.default_timezone = :local
     config.autoload_lib(ignore: %w[assets tasks])
   end

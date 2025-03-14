@@ -7,7 +7,7 @@ class PartnersController < ApplicationController
     @partner = Partner.new(partner_params)
     if @partner.valid?
       @partner.save!
-      redirect_to register_events_path(@partner.id)
+      redirect_to new_event_path(partner_id: @partner.id, older_practice: params[:older_practice])
     else
       render :new
     end
