@@ -18,8 +18,14 @@ class EventsController < ApplicationController
     @weapons = Weapon.all
   end
 
-  def create
+  def register
     debugger
+    @event = Event.new
+    @partners = Partner.find(params[:partner_id])
+    @weapons = Weapon.all
+  end
+
+  def create
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         event = Event.new(

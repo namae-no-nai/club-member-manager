@@ -4,10 +4,12 @@ Rails.application.routes.draw do
   root "events#index"
   resources :events, only: %i[ index new create ] do
     collection do
+      get 'register/:partner_id', to: 'events#register', as: 'register'
       get :filter
       get :generate_pdf
     end
   end
+
   resource :partners, only: %i[ new create ] do
     collection do
       post :register
