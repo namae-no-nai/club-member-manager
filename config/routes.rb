@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :weapons, only: %i[ new create ]
+
   resource :partners, only: %i[ new create ] do
     collection do
       post :register

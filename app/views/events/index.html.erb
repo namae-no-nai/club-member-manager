@@ -12,6 +12,12 @@
       </button>
     <% end %>
 
+    <%= link_to new_weapons_path, class: "block text-center" do %>
+      <button class="w-40 h-40 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 transition duration-300">
+        Registrar Arma
+      </button>
+    <% end %>
+
     <%= link_to filter_events_path, class: "block text-center" do %>
       <button class="w-40 h-40 border-2 border-red-500 bg-white text-black rounded-lg shadow-lg hover:bg-red-100 transition duration-300">
         Gerar PDF

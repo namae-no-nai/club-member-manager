@@ -8,6 +8,7 @@ class CreatePartners < ActiveRecord::Migration[8.0]
       t.text :address
       t.string :filiation_number
       t.date :first_filiation_date
+      t.integer :weapon_id
 
       t.timestamps
     end
