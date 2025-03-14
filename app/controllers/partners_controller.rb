@@ -3,22 +3,9 @@ class PartnersController < ApplicationController
     @partner = Partner.new
   end
 
-  def register
-    debugger
-  end
-
   def create
     @partner = Partner.new(partner_params)
     if @partner.valid?
-      # create_options = WebAuthn::Credential.options_for_create(
-      #   user: { id: @partner.webauthn_id, name: @partner.full_name },
-      #   exclude: @partner.credentials.map { |c| c.webauthn_id }
-      # )
-      # session[:current_registration] = {
-      #                                    challenge: create_options.challenge,
-      #                                    attributes: partner_params
-      #                                   }
-      # render json: create_options
       @partner.save!
       redirect_to new_event_path
     else

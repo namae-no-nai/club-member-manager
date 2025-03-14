@@ -1,7 +1,6 @@
 <div class="flex justify-center items-center min-h-screen">
-  <div class="w-full max-w-2xl text-center">
-    <h1 class="text-3xl font-bold text-red-600 mb-6">Filtrar e Gerar PDF</h1>
-    
+  <div class="w-full max-w-2xl">
+    <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Filtrar e Gerar PDF</h1>
     <%= form_with(url: generate_pdf_events_path, method: :get, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4") do |f| %>
       <div>
         <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
@@ -18,10 +17,12 @@
         <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, class: "form-input border-gray-300 rounded-md p-2" %>
       </div>
 
-      <div class="mt-6 flex justify-between">
-        <%= f.submit "Filtrar e gerar PDF", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
-        <%= link_to 'Voltar', root_path, class: "text-gray-700 hover:underline" %>
+      <div class="mt-6 flex justify-between items-center">
+        <%= f.submit "Filtrar e gerar PDF", class: "bg-red-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
       </div>
     <% end %>
   </div>
 </div>
+
+

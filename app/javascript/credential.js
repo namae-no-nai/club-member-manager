@@ -2,7 +2,6 @@ import * as WebAuthnJSON from "@github/webauthn-json"
 import { showMessage } from "messenger";
 
 function getCSRFToken() {
-  debugger
   var CSRFSelector = document.querySelector('meta[name="csrf-token"]')
   if (CSRFSelector) {
     return CSRFSelector.getAttribute("content")
@@ -74,19 +73,16 @@ function create(callbackUrl, credentialOptions) {
     // extensions: {"appidExclude": "https://acme.example.com"}
   };
 
-  debugger
   navigator.credentials.create({ publicKey })
   .then(function (newCredentialInfo) {
     // Send new credential info to server for verification and registration.
   }).catch(function (err) {
-    debugger
     // No acceptable authenticator or user refused consent. Handle appropriately.
   });
 
   // WebAuthnJSON.create({ "publicKey": credentialOptions }).then(function(credential) {
   //   callback(callbackUrl, credential);
   // }).catch(function(error) {
-  //   debugger
   //   showMessage(error);
   // });
 

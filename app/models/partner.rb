@@ -12,6 +12,10 @@ class Partner < ApplicationRecord
     self.webauthn_id ||= WebAuthn.generate_user_id
   end
 
+  def friendly_name
+    "#{registry_certificate} - #{full_name}"
+  end
+
   private
 
   def cpf_must_be_valid

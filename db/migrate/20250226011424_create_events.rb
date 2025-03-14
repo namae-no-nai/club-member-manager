@@ -6,7 +6,7 @@ class CreateEvents < ActiveRecord::Migration[8.0]
       t.string :activity
       t.date :date
       t.integer :ammo_amount
-      t.integer :sheet
+      t.integer :sheet, default: 1
 
       t.timestamps
     end

@@ -2,6 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
+    debugger
+    $('.select2').select2();
   }
 
 	add(event) {
@@ -9,7 +11,8 @@ export default class extends Controller {
 
 		const template = document.getElementById("weapon-wrapper-template")
 		const wrapper = template.innerHTML
-		document.getElementById("weapons").insertAdjacentHTML('afterend', wrapper)
+		document.getElementById("weapons").insertAdjacentHTML('beforeend', wrapper)
+    $('.select2').select2();
 	}
 
 	remove(event) {
