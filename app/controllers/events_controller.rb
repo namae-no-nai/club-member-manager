@@ -1,4 +1,6 @@
 class EventsController < ApplicationController
+  before_action :find_partners, only: [:new]
+
   def index;end
 
   def filter;end
@@ -13,12 +15,7 @@ class EventsController < ApplicationController
   end
 
   def new
-    if older_practice
-      @partners = Partner.all
-    else
-      @partners = Partner.find(params[:partner_id])
-    end
-    @older_practice = older_practice
+    @partners ||= Partner.all
     @event = Event.new
     @weapons = Weapon.all
   end
@@ -38,9 +35,10 @@ class EventsController < ApplicationController
   end
 
   private
-
-  def older_practice
-    params[:older_practice].present?
+  
+  def find_partners
+    @partners = Partner.where(id: params[:partner_id]).presence
+    @new_practice = @partners.present?
   end
 
   def practices_params

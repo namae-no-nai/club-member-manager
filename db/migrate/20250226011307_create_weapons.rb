@@ -4,6 +4,7 @@ class CreateWeapons < ActiveRecord::Migration[8.0]
       t.string :caliber
       t.string :category
       t.string :sigma
+      t.references :partner, foreign_key: true, null: false
 
       t.timestamps
     end

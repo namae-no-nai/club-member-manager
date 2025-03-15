@@ -16,7 +16,13 @@
         </div>
       <% end %>
 
-      <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
+        <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
+          <div>
+            <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
+        </div>
+  
+        <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partners_path(older_practice: true), class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
         <div>
           <%= form.label :caliber, 'Calibre', class: "block text-sm font-medium text-gray-700" %>
           <%= form.text_field :caliber, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>

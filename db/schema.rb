@@ -23,11 +23,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
 
   create_table "events", force: :cascade do |t|
     t.integer "partner_id"
-    t.integer "weapon_id"
     t.string "activity"
     t.date "date"
     t.integer "ammo_amount"
-    t.integer "sheet"
+    t.integer "sheet", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -57,9 +56,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
     t.string "caliber"
     t.string "category"
     t.string "sigma"
+    t.integer "partner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["partner_id"], name: "index_weapons_on_partner_id"
   end
 
   add_foreign_key "credentials", "partners"
+  add_foreign_key "weapons", "partners"
 end

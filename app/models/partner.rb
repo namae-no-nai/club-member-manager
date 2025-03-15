@@ -7,7 +7,7 @@ class Partner < ApplicationRecord
   validate :cpf_must_be_valid
   has_many :events
   has_many :credentials
-  has_many :wepons
+  has_many :weapons
   
   after_initialize do
     self.webauthn_id ||= WebAuthn.generate_user_id

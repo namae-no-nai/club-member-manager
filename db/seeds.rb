@@ -15,10 +15,3 @@ Weapon.destroy_all
   )
 end
 
-3.times do
-  Weapon.create!(
-    caliber: Faker::Number.between(from: 1, to: 10),
-    category: Faker::Lorem.word,
-    sigma: Faker::Number.decimal(l_digits: 2, r_digits: 2)
-  )
-end

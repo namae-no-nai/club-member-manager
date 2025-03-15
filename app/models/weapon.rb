@@ -1,10 +1,17 @@
 class Weapon < ApplicationRecord
-  validates :caliber, :category, :sigma, presence:, :partner_id true
+  validates :caliber, :category, :sigma, :partner_id ,presence: true
 
   has_many :events
   belongs_to :partner
 
+
+  scope :available, ->(partner) { where(partner_id: [partner.id, 1]) } 
+
+  def to_h
+    {id:, friendly_name:}
+  end
+
   def friendly_name
-    "#{category} / #{caliber} / #{sigma}"
+    "#{category} - #{caliber} - #{sigma}"
   end
 end

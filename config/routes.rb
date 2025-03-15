@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :weapons, only: %i[ new create ]
+  resources :weapons, only: %i[ index new create ] 
 
   resource :partners, only: %i[ new create ] do
     collection do
