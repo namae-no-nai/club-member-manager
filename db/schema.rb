@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
 
   create_table "events", force: :cascade do |t|
     t.integer "partner_id"
+    t.integer "weapon_id"
     t.string "activity"
     t.date "date"
     t.integer "ammo_amount"
