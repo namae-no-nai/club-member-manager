@@ -3,8 +3,9 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     $('.select2').select2();
-    // const partnerSelection = document.getElementById("event_partner_id");
-    // partnerSelection.addEventListener("change", this.updateWeapons)
+    $('.select2').on('change', (event) => {
+      this.updateWeapons(event);
+    });
   }
 
 	add(event) {
@@ -21,7 +22,17 @@ export default class extends Controller {
 
     fetch(`/weapons?partner_id=${event.target.value}`, { headers })
           .then(response => response.json())
-          .then(data => console.log(data));
+          .then(data => {
+            const selectElement = document.querySelector('select[name="practices[][weapon_id]"]');
+            selectElement.innerHTML = '<option value="">Selecione a Arma</option>';
+            data.forEach(weapon => {
+              const option = document.createElement('option');
+              option.value = weapon.id;
+              option.textContent = weapon.friendly_name;
+              selectElement.appendChild(option);
+            });
+            $(selectElement).select2();
+          })
   }
 
 	remove(event) {

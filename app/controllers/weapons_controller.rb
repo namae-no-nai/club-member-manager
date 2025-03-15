@@ -2,8 +2,8 @@ class WeaponsController < ApplicationController
 
   def index
     @partner = Partner.find_by(id: params[:partner_id])
-    @weapons = @partner ? Weapon.available(@partner) : Weapon.all 
-    respond_to do |format| 
+    @weapons = Weapon.available(@partner)
+    respond_to do |format|
       format.json {render json: @weapons.map(&:to_h)}
     end
   end

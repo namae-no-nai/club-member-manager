@@ -19,13 +19,13 @@
         <div>
           <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
           <%= form.collection_select :partner_id,
-                                     @partners, 
-                                     :id, 
-                                     :friendly_name, 
-                                     {}, 
-                                     { 
-                                        prompt: "Selecione o CR do atirador", 
-                                        class: "form-select w-full mt-1 p-2 border rounded-md",
+                                     @partners,
+                                     :id,
+                                     :friendly_name,
+                                     {},
+                                     {
+                                        prompt: "Selecione o CR do atirador",
+                                        class: "form-select w-full mt-1 p-2 border rounded-md select2",
                                         disabled: @new_practice,
                                         data: { action: "change->nested-form#updateWeapons" }
                                       }
