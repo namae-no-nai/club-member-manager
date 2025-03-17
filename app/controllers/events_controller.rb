@@ -17,7 +17,7 @@ class EventsController < ApplicationController
   def new
     @partners ||= Partner.all
     @event = Event.new
-    @weapons = Partner.first.weapons
+    @weapons = Partner.first.weapons # + Partner.club
   end
 
   def create
