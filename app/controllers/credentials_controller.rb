@@ -12,7 +12,7 @@ class CredentialsController < ApplicationController
         id: current_user.webauthn_id,
         name: current_user.username,
       },
-      exclude: current_user.credentials.pluck(:external_id),
+      exclude: current_user.credentials.pluck(:webauthn_id),
       authenticator_selection: { user_verification: "required" }
     )
 
@@ -30,7 +30,7 @@ class CredentialsController < ApplicationController
       webauthn_credential.verify(session[:current_registration]["challenge"], user_verification: true)
 
       credential = current_user.credentials.find_or_initialize_by(
-        external_id: Base64.strict_encode64(webauthn_credential.raw_id)
+        webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id)
       )
 
       if credential.update(

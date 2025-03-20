@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_20_034321) do
   create_table "credentials", force: :cascade do |t|
     t.string "webauthn_id"
     t.string "public_key"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "partner_id", null: false
+    t.string "nickname"
     t.index ["partner_id"], name: "index_credentials_on_partner_id"
   end
 
@@ -50,7 +51,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
     t.date "first_filiation_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "webauthn_id"
+    t.string "webauthn_id"
   end
 
   create_table "weapons", force: :cascade do |t|

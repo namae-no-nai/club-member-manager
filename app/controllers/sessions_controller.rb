@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
 
     if user
       get_options = WebAuthn::Credential.options_for_get(
-        allow: user.credentials.pluck(:external_id),
+        allow: user.credentials.pluck(:webauthn_id),
         user_verification: "required"
       )
 
@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
     user = Partner.find_by(username: session[:current_authentication]["username"])
     raise "user #{session[:current_authentication]["username"]} never initiated sign up" unless user
 
-    credential = user.credentials.find_by(external_id: Base64.strict_encode64(webauthn_credential.raw_id))
+    credential = user.credentials.find_by(webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id))
 
     begin
       webauthn_credential.verify(
