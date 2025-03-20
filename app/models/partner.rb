@@ -1,8 +1,8 @@
 class Partner < ApplicationRecord
-  validates :full_name, :cpf, :registry_certificate,
-            :registry_certificate_expiration_date,
-            :filiation_number, :first_filiation_date,
-            presence: true
+  # validates :full_name, :cpf, :registry_certificate,
+  #           :registry_certificate_expiration_date,
+  #           :filiation_number, :first_filiation_date,
+  #           presence: true
   validates :cpf, uniqueness: true
   validate :cpf_must_be_valid
   has_many :events
