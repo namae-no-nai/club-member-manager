@@ -1,0 +1,32 @@
+<div class="mdc-card app-card">
+  <div class="mdc-card__primary-action mdc-ripple-upgraded mdc-ripple-upgraded--foreground-activation" tabindex="0">
+    <div class="app-card__primary"><h2 class="app-card__title mdc-typography--headline6">Sign in</h2>
+      <div class="app-card__secondary mdc-typography--body2">
+        <%= form_with scope: :session, url: session_path, local: false, id: "new-session", data: { controller: "new-session", action: "ajax:success->new-session#create ajax:error->new-session#error" } do |form| %>
+            <div class="form-field">
+              <div class="mdc-text-field mdc-text-field--fullwidth" data-controller="textfield" data-target="new-session.usernameField">
+                <%= form.text_field :username, class: "mdc-text-field__input", placeholder: "Username", required: true, autocapitalize: "none", "aria-controls" => "username-helper-text" %>
+                <div class="mdc-line-ripple"></div>
+              </div>
+
+              <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                </div>
+              </div>
+            </div>
+
+            <div class="center">
+              <%= form.submit "Sign in using WebAuthn", class: "mdc-button mdc-button--raised" %>
+            </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="mdc-card__actions">
+      <div class="mdc-card__action-buttons">
+        <div class="mdc-card__actions">
+          <%= link_to 'Register', new_registration_path, class: "mdc-button mdc-card__action mdc-card__action--button mdc-ripple-upgraded" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
