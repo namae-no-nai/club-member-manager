@@ -27,7 +27,12 @@ Rails.application.routes.draw do
   resource :partners, only: %i[ new create ] do
     collection do
       post :create
-      post :webauthn_callback
+      post :webauthn_create_callback
+    end
+
+    member do
+      post :identify
+      post :webauthn_identify_callback
     end
   end
   get "/pdfs/generate", to: "pdfs#document"
