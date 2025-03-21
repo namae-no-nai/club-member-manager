@@ -22,7 +22,9 @@ function callback(url, body) {
     credentials: 'same-origin'
   }).then(function(response) {
     if (response.ok) {
-      window.location.replace("/")
+      response.json().then(function(data) {
+        window.location.replace(data["redirect_to"]);
+      });
     } else if (response.status < 500) {
       response.text().then(showMessage);
     } else {

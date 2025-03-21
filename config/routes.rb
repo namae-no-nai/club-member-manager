@@ -21,12 +21,13 @@ Rails.application.routes.draw do
   resources :credentials, only: %i[ index new create destroy] do
     post :callback, on: :collection
   end
-  
-  resources :weapons, only: %i[ index new create ] 
+
+  resources :weapons, only: %i[ index new create ]
 
   resource :partners, only: %i[ new create ] do
     collection do
-      post :register
+      post :create
+      post :webauthn_callback
     end
   end
   get "/pdfs/generate", to: "pdfs#document"
