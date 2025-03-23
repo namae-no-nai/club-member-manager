@@ -5,46 +5,33 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = Partner.find_by(username: session_params[:username])
+    partner = Partner.find(params[:id])
 
-    if user
-      get_options = WebAuthn::Credential.options_for_get(
-        allow: user.credentials.pluck(:webauthn_id),
-        user_verification: "required"
-      )
+    get_options = WebAuthn::Credential.options_for_get(
+      allow: partner.credentials.pluck(:webauthn_id),
+      user_verification: "required"
+    )
 
-      session[:current_authentication] = { challenge: get_options.challenge, username: session_params[:username] }
+    session[:current_authentication] = { challenge: get_options.challenge, id: partner.id }
 
-      respond_to do |format|
-        format.json { render json: get_options }
-      end
-    else
-      respond_to do |format|
-        format.json { render json: { errors: ["Username doesn't exist"] }, status: :unprocessable_entity }
-      end
+    respond_to do |format|
+      format.json { render json: get_options }
     end
   end
 
   def callback
     webauthn_credential = WebAuthn::Credential.from_get(params)
 
-    user = Partner.find_by(username: session[:current_authentication]["username"])
-    raise "user #{session[:current_authentication]["username"]} never initiated sign up" unless user
-
-    credential = user.credentials.find_by(webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id))
+    partner = Partner.find(session[:current_authentication]["id"])
+    credential = partner.credentials.find_by(webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id))
 
     begin
-      webauthn_credential.verify(
-        session[:current_authentication]["challenge"],
-        public_key: credential.public_key,
-        sign_count: credential.sign_count,
-        user_verification: true,
-      )
+      webauthn_credential.verify(session[:current_authentication]["challenge"], public_key: credential.public_key, sign_count: credential.sign_count, user_verification: true)
 
       credential.update!(sign_count: webauthn_credential.sign_count)
-      sign_in(user)
+      sign_in(partner)
 
-      render json: { status: "ok" }, status: :ok
+      render json: { redirect_to: new_event_path(partner_id: partner.id, older_practice: false) }, status: :ok
     rescue WebAuthn::Error => e
       render json: "Verification failed: #{e.message}", status: :unprocessable_entity
     ensure
