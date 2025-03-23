@@ -6,7 +6,7 @@ class PartnersController < ApplicationController
   def create
     @partner = Partner.new(partner_params)
     if @partner.save
-      redirect_to new_event_path(partner_id: @partner.id, older_practice: params[:older_practice])
+      redirect_to new_event_path(partner_id: @partner.id, old_practice: true)
     else
       render :new
     end

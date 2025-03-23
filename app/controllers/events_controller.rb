@@ -18,6 +18,7 @@ class EventsController < ApplicationController
     @partners ||= Partner.all
     @event = Event.new
     @weapons = Partner.first.weapons # + Partner.club
+    @old_practice = params[:old_practice] == "true"
   end
 
   def create
@@ -35,7 +36,7 @@ class EventsController < ApplicationController
   end
 
   private
-  
+
   def find_partners
     @partners = Partner.where(id: params[:partner_id]).presence
     @new_practice = @partners.present?

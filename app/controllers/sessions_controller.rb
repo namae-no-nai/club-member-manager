@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
       credential.update!(sign_count: webauthn_credential.sign_count)
       sign_in(partner)
 
-      render json: { redirect_to: new_event_path(partner_id: partner.id, older_practice: false) }, status: :ok
+      render json: { redirect_to: new_event_path(partner_id: partner.id) }, status: :ok
     rescue WebAuthn::Error => e
       render json: "Verification failed: #{e.message}", status: :unprocessable_entity
     ensure
