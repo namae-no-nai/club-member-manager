@@ -1,39 +1,59 @@
-<div class="mdc-card app-card">
-  <div class="mdc-card__primary-action mdc-ripple-upgraded mdc-ripple-upgraded--foreground-activation" tabindex="0">
-    <div class="app-card__primary"><h2 class="app-card__title mdc-typography--headline6">Register</h2>
-      <div class="app-card__secondary mdc-typography--body2">
-        <%= form_with scope: :registration, url: registration_path, local: false,  id: "new-registration", data: { controller: "new-registration", action: "ajax:success->new-registration#create ajax:error->new-registration#error" } do |form| %>
-            <div class="form-field">
-              <div class="mdc-text-field mdc-text-field--fullwidth" data-controller="textfield" data-target="new-registration.usernameField">
-                <%= form.text_field :cpf, class: "mdc-text-field__input", placeholder: "CPF", required: true, autocapitalize: "none", "aria-controls" => "username-helper-text" %>
-                <div class="mdc-line-ripple"></div>
-              </div>
-
-              <div class="mdc-text-field-helper-line">
-                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
-                </div>
-              </div>
-            </div>
-
-            <div class="form-field">
-              <div class="mdc-text-field mdc-text-field--fullwidth" data-controller="textfield">
-                <%= form.text_field :nickname, class: "mdc-text-field__input", placeholder: "Security Key nickname", required: true %>
-                <div class="mdc-line-ripple"></div>
-              </div>
-            </div>
-
-            <div class="center">
-              <%= form.submit "Register using WebAuthn", class: "mdc-button mdc-button--raised" %>
-            </div>
-        <% end %>
-      </div>
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Registrar Praticante</h1>
     </div>
-    <div class="mdc-card__actions">
-      <div class="mdc-card__action-buttons">
-        <div class="mdc-card__actions">
-          <%= link_to 'Sign in', new_session_path, class: "mdc-button mdc-card__action mdc-card__action--button mdc-ripple-upgraded" %>
+
+    <%= form_with(model: @partner, url: registrations_path, local: false, data: { controller: 'new-registration', action: "ajax:success->new-registration#create ajax:error->new-registration#error"}, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <% if @partner.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold"><%= pluralize(@partner.errors.count, "error") %> prevented this event from being saved:</strong>
+          <ul class="mt-2">
+            <% @partner.errors.full_messages.each do |message| %>
+              <li class="text-sm"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
+        <div>
+          <%= form.label :full_name, 'Nome completo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :full_name, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :cpf, 'CPF', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :cpf, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate, 'CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :registry_certificate, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate_expiration_date, 'Data de expiração CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :registry_certificate_expiration_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+        <div>
+          <%= form.label :address, 'Endereço', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :address, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+        <div>
+          <%= form.label :filiation_number, 'Número de filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :filiation_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+        <div>
+          <%= form.label :first_filiation_date, 'Data da primeira filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
         </div>
       </div>
-    </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Registrar Praticante", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
   </div>
 </div>

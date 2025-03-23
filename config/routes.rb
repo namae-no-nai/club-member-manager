@@ -10,11 +10,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :session, only: [:new, :create, :destroy] do
+  resource :sessions, only: %i[ new create destroy ] do
     post :callback
   end
 
-  resource :registration, only: [:new, :create] do
+  resource :registrations, only: %i[ new create ] do
     post :callback
   end
 

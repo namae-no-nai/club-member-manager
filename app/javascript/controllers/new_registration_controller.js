@@ -14,7 +14,7 @@ export default class extends Controller {
     // Registration
     if (credentialOptions["user"]) {
       var credential_nickname = "index finger";
-      var callback_url = `/partners/webauthn_callback?credential_nickname=${credential_nickname}`
+      var callback_url = `/registrations/callback?credential_nickname=${credential_nickname}`
 
       Credential.create(encodeURI(callback_url), credentialOptions);
     }
