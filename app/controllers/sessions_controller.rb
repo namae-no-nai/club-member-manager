@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    partner = Partner.find(params[:id])
+    partner = Partner.find(params[:partner_id])
 
     get_options = WebAuthn::Credential.options_for_get(
       allow: partner.credentials.pluck(:webauthn_id),
