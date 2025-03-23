@@ -8,7 +8,6 @@ export default class extends Controller {
 
   create(event) {
     var [data, status, xhr] = event.detail;
-    console.log(data);
     var credentialOptions = data;
     Credential.get(credentialOptions);
   }

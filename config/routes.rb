@@ -10,11 +10,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :sessions, only: %i[ new create destroy ] do
+  resources :sessions, only: %i[ new create destroy ] do
     post :callback
   end
 
-  resource :registrations, only: %i[ new create ] do
+  resources :registrations, only: %i[ new create ] do
     post :callback
   end
 
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   resources :weapons, only: %i[ index new create ]
 
-  resource :partners, only: %i[ new create ] do
+  resources :partners, only: %i[ new create ] do
     collection do
       post :create
       post :webauthn_create_callback

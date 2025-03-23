@@ -2,6 +2,7 @@
 
 class SessionsController < ApplicationController
   def new
+    @partners = Partner.all
   end
 
   def create
