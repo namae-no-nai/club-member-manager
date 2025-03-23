@@ -11,15 +11,21 @@ Rails.application.routes.draw do
   end
 
   resources :sessions, only: %i[ new create destroy ] do
-    post :callback
+    collection do
+      post :callback
+    end
   end
 
   resources :registrations, only: %i[ new create ] do
-    post :callback
+    collection do
+      post :callback
+    end
   end
 
   resources :credentials, only: %i[ index new create destroy] do
-    post :callback, on: :collection
+    collection do
+      post :callback
+    end
   end
 
   resources :weapons, only: %i[ index new create ]
@@ -29,11 +35,7 @@ Rails.application.routes.draw do
       post :create
       post :webauthn_create_callback
     end
-
-    member do
-      post :identify
-      post :webauthn_identify_callback
-    end
   end
+
   get "/pdfs/generate", to: "pdfs#document"
 end
