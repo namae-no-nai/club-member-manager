@@ -8,7 +8,9 @@ class Partner < ApplicationRecord
   has_many :events
   has_many :credentials
   has_many :weapons
-  
+
+  scope :club, -> {find_by registry_certificate: 66098 }
+
   after_initialize do
     self.webauthn_id ||= WebAuthn.generate_user_id
   end

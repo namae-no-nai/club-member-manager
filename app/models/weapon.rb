@@ -5,7 +5,7 @@ class Weapon < ApplicationRecord
   belongs_to :partner
 
 
-  scope :available, ->(partner) { where(partner_id: partner.id) } 
+  scope :available, ->(partner) { where(partner_id: [partner.id, Partner.club.id]) }
 
   def to_h
     {id:, friendly_name:}
