@@ -63,7 +63,7 @@
     <table class="w-full border-collapse border border-gray-400 text-sm mt-2">
       <thead>
         <tr class="bg-gray-200">
-          <th class="border border-gray-400 px-2 py-1" colspan=5><h5 class="font-bold text-center"> Calibre <%= weapon.category %> - <%= weapon.caliber %></h5></th>
+          <th class="border border-gray-400 px-2 py-1" colspan=5><h5 class="font-bold text-center"> <%= weapon.weapon_type %> <%= weapon.authorized_use %> - <%= weapon.caliber %></h5></th>
         </tr>
       </thead>
       <tbody>
@@ -109,7 +109,7 @@
     </table>
   <% end %>
   <p class="text-sm text-center mt-3">São Paulo, <%= l(Date.current, format: :long) %></p>
-  <p class="text-sm text-center mt-3">Nome do presidente</p>
+  <p class="text-sm text-center mt-3">Vera Elena Massaropi Ratticheri</p>
   <p class="text-sm text-center mt-3">Presidente</p>
 
 </div>
