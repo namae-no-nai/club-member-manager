@@ -12,4 +12,3 @@ Partner.create!(
   filiation_number: Faker::Number.unique.number(digits: 8),
   first_filiation_date: Faker::Date.between(from: 5.years.ago, to: Date.today)
 )
-

@@ -55,9 +55,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
   end
 
   create_table "weapons", force: :cascade do |t|
-    t.string "caliber"
-    t.string "category"
     t.string "sigma"
+    t.string "serial_number"
+    t.string "weapon_type"
+    t.string "brand"
+    t.string "caliber"
+    t.string "model"
+    t.string "action"
+    t.string "bore_type"
+    t.string "authorized_use"
     t.integer "partner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

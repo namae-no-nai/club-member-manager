@@ -1,10 +1,9 @@
 class WeaponsController < ApplicationController
-
   def index
     @partner = Partner.find_by(id: params[:partner_id])
     @weapons = Weapon.available(@partner)
     respond_to do |format|
-      format.json {render json: @weapons.map(&:to_h)}
+      format.json { render json: @weapons.map(&:to_h) }
     end
   end
 
@@ -26,6 +25,9 @@ class WeaponsController < ApplicationController
   private
 
   def weapon_params
-    params.require(:weapon).permit(:caliber, :sigma, :category, :partner_id)
+    params.require(:weapon).permit(
+      :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber, :model,
+      :action, :bore_type, :authorized_use
+    )
   end
 end

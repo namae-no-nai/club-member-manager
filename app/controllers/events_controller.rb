@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :find_partners, only: [:new]
+  before_action :find_partners, only: [ :new ]
 
   def index;end
 
@@ -8,7 +8,7 @@ class EventsController < ApplicationController
   def generate_pdf
     @partner = Partner.find_by(registry_certificate: params[:registry_certificate])
     if @partner.blank?
-      redirect_to(filter_events_path, alert: 'Praticante não encontrado')
+      redirect_to(filter_events_path, alert: "Praticante não encontrado")
       return
     end
     start_date = params[:start_date]

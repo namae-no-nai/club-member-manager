@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CredentialsController < ApplicationController
-
   before_action :enforce_current_user
 
   def index;end
@@ -10,7 +9,7 @@ class CredentialsController < ApplicationController
     create_options = WebAuthn::Credential.options_for_create(
       user: {
         id: current_user.webauthn_id,
-        name: current_user.username,
+        name: current_user.username
       },
       exclude: current_user.credentials.pluck(:webauthn_id),
       authenticator_selection: { user_verification: "required" }
@@ -50,7 +49,6 @@ class CredentialsController < ApplicationController
   end
 
   def destroy
-
     if current_user.blank?
       redirect_to new_session_path
     end

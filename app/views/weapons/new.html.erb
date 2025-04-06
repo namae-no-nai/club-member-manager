@@ -23,19 +23,50 @@
         </div>
 
         <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partner_path(return_to: new_weapon_path), class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
+        
+        <div>
+          <%= form.label :sigma, 'Sigma', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :sigma, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :serial_number, 'Nº de série', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :serial_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :weapon_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :weapon_type, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :brand, 'Marca', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :brand, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
         <div>
           <%= form.label :caliber, 'Calibre', class: "block text-sm font-medium text-gray-700" %>
           <%= form.text_field :caliber, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
         </div>
 
         <div>
-          <%= form.label :category, 'Categoria', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :category, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+          <%= form.label :model, 'Modelo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :model, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
         </div>
 
         <div>
-          <%= form.label :sigma, 'Sigma', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.number_field :sigma, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+          <%= form.label :action, 'Funcionamento', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :action, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :bore_type, 'TIpo de alma', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :bore_type, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+        
+        <div>
+          <%= form.label :authorized_use, 'Arma de uso', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :authorized_use, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
         </div>
 
       <div class="mt-6 flex justify-between">
