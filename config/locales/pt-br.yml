@@ -10,7 +10,7 @@ pt-BR:
       event: "Evento"
     attributes:
       event:
-        partner_id: "Parceiro"
+        partner_id: "Sócio"
         weapon_id: "Arma"
         activity: "Atividade"
         date: "Data"

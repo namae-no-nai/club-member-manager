@@ -16,7 +16,7 @@ class Partner < ApplicationRecord
   end
 
   def friendly_name
-    "#{registry_certificate} - #{full_name}"
+    "#{filiation_number} - #{full_name}"
   end
 
   private
