@@ -34,10 +34,13 @@
           <%= form.number_field :serial_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
         </div>
 
-        <div>
-          <%= form.label :weapon_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :weapon_type, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
-        </div>
+      <div>
+        <%= form.label :weapon_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
+        <%= form.select :weapon_type,
+            Weapon.weapon_types.keys.map { |type| [type.humanize, type] },
+            { selected: form.object.bore_type.presence || 'pistola' },
+            class: "form-select w-full mt-1 p-2 border rounded-md" %>
+      </div>
 
         <div>
           <%= form.label :brand, 'Marca', class: "block text-sm font-medium text-gray-700" %>
@@ -56,18 +59,36 @@
 
         <div>
           <%= form.label :action, 'Funcionamento', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :action, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
-        </div>
+          <%= form.select :action,
+              Weapon.suggested_actions.map { |type| [type.humanize, type] },
+              { selected: form.object.action.presence || 'semi-automático' },
+              {
+                class: "form-select w-full mt-1 p-2 border rounded-md",
+                onchange: "handleActionChange(this.value)"
+              } %>
+        
+          <div id="custom_action_wrapper" style="<%= form.object.action.present? && !Weapon.suggested_actions.include?(form.object.action) ? '' : 'display: none;' %>" class="mt-2">
+            <%= label_tag :custom_action, "Digite o funcionamento:", class: "block text-sm font-medium text-gray-700" %>
+            <%= text_field_tag :custom_action, form.object.action.presence && !Weapon.suggested_actions.include?(form.object.action) ? form.object.action : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático" %>
+          </div>
+        </div>        
+      </div>
 
-        <div>
-          <%= form.label :bore_type, 'TIpo de alma', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :bore_type, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        <div>        
+          <%= form.label :bore_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :bore_type,
+              Weapon.bore_types.keys.map { |type| [type.humanize, type] },
+              { selected: form.object.bore_type.presence || 'raiada' },
+              class: "form-select w-full mt-1 p-2 border rounded-md" %>
         </div>
         
         <div>
           <%= form.label :authorized_use, 'Arma de uso', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :authorized_use, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
-        </div>
+          <%= form.select :authorized_use,
+              Weapon.authorized_uses.keys.map { |type| [type.humanize, type] },
+              { selected: form.object.bore_type.presence || 'permitido' },
+              class: "form-select w-full mt-1 p-2 border rounded-md" %>
+          </div>
 
       <div class="mt-6 flex justify-between">
         <%= form.submit "Registrar Arma", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
@@ -76,3 +97,15 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  function handleActionChange(value) {
+    const wrapper = document.getElementById("custom_action_wrapper");
+    if (value === "outros") {
+      wrapper.style.display = "block";
+    } else {
+      wrapper.style.display = "none";
+      document.getElementById("custom_action").value = ""; // limpa se trocar
+    }
+  }
+</script>

@@ -26,6 +26,8 @@ class EventsController < ApplicationController
   end
 
   def create
+    update_params
+    debugger
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         event = Event.new(
@@ -48,6 +50,14 @@ class EventsController < ApplicationController
 
   def practices_params
     params.permit(practices: [ :weapon_id, :activity, :ammo_amount ])[:practices]
+  end
+
+  def update_params
+    params[:practices].each do |practice|
+      if practice[:activity] == 'Outros'
+        practice[:activity] = practice[:custom_activity]
+      end
+    end
   end
 
   def event_params

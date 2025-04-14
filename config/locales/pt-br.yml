@@ -30,7 +30,18 @@ pt-BR:
           blank: "Folha não pode estar em branco"
           not_a_number: "A folha deve ser um número"
           equal_to: "A folha deve ser igual a 1"
-
+      weapon:
+        weapon_types:
+          pistola: "Pistola"
+          revolver: "Revólver"
+          carabina: "Carabina"
+          espingarda: "Espingarda"
+        bore_type:
+          lisa: "Lisa"
+          raiada: "Raiada"
+        action:
+          semi_automatico: "Semi-automático"
+          repeticao: "Repetição"
   helpers:
     submit:
       create: "Criar Evento"

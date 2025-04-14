@@ -13,6 +13,7 @@ class WeaponsController < ApplicationController
   end
 
   def create
+    custom_action
     @weapon = Weapon.new(weapon_params)
     if @weapon.save!
       flash[:notice] = "Registros criados com sucesso."
@@ -29,5 +30,11 @@ class WeaponsController < ApplicationController
       :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber, :model,
       :action, :bore_type, :authorized_use
     )
+  end
+
+  def custom_action
+    if params[:weapon][:action] == "outros"
+      params[:weapon][:action] = params[:custom_action]
+    end
   end
 end
