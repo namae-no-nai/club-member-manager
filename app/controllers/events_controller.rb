@@ -5,6 +5,15 @@ class EventsController < ApplicationController
 
   def filter;end
 
+  def last_records_one
+  end
+
+  def last_records_two
+  end
+
+  def last_records_three
+  end
+
   def generate_pdf
     @partner = Partner.find_by(registry_certificate: params[:registry_certificate])
     if @partner.blank?

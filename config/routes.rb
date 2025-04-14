@@ -7,6 +7,10 @@ Rails.application.routes.draw do
       get "register/:partner_id", to: "events#register", as: "register"
       get :filter
       get :generate_pdf
+
+      get :last_records_one
+      get :last_records_two
+      get :last_records_three
     end
   end
 
