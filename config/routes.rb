@@ -7,12 +7,12 @@ Rails.application.routes.draw do
       get "register/:partner_id", to: "events#register", as: "register"
       get :filter
       get :generate_pdf
-
-      get :last_records_one
-      get :last_records_two
-      get :last_records_three
     end
   end
+
+  get :last_records, to: "records#last_records"
+  get :last_partner_records, to: "records#last_partner_records"
+  get :last_events_records, to: "records#last_events_records"
 
   resources :sessions, only: %i[ new create destroy ] do
     collection do

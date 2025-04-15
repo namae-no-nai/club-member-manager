@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-12">
   <div class="flex space-x-12">
     <%= link_to new_session_path, class: "block text-center" do %>
       <button class="w-40 h-40 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition duration-300">
@@ -24,10 +24,12 @@
       </button>
     <% end %>
   </div>
-</div>
 
-<%= turbo_frame_tag "last_records", src: last_records_one_events_path do %>
-  <%= link_to "Last Records ONE", last_records_one_events_path, class: "block text-center" %>
-  <%= link_to "Last Records TWO", last_records_two_events_path, class: "block text-center" %>
-  <%= link_to "Last Records THREE", last_records_three_events_path, class: "block text-center" %>
-<% end %>
+  <div>
+    <%= link_to last_records_path, class: "block text-center" do %>
+      <button class="w-80 h-20 bg-yellow-500 text-black rounded-lg shadow-lg hover:bg-yellow-100 transition duration-300">
+        Listar e editar Sócios, Eventos e Armas
+      </button>
+    <% end %>
+  </div>
+</div>

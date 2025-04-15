@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "last_records" do %>
+  <div class="space-y-4">
+    <% Partner.all.each do |partner| %>
+      <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+        <span class="text-gray-800 font-medium"><%= partner.full_name %></span>
+        <%= link_to "Editar", root_path, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
