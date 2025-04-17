@@ -1,3 +1,15 @@
 <%= turbo_frame_tag "last_records" do %>
-  <p>Listing all the last records TWO</p>
+  <div class="space-y-4">
+    <% @events.each do |event| %>
+      <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+        <span class="text-gray-800 font-medium"><%= event.partner.full_name %></span>
+        <span class="text-gray-800 font-medium"><%= event.created_at %></span>
+        <%= link_to "Editar", edit_event_path(event), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6 flex justify-center">
+    <%= paginate @events, theme: 'tailwind', params: { turbo_frame: "last_records" } %>
+  </div>
 <% end %>

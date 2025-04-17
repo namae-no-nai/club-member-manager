@@ -1,0 +1,57 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Editar Registro</h1>
+    </div>
+
+    <%= form_with(model: @event, url: event_path(@event), method: :patch, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <% if @event.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold"><%= pluralize(@event.errors.count, "erro") %> impediram a atualização:</strong>
+          <ul class="mt-2">
+            <% @event.errors.full_messages.each do |message| %>
+              <li class="text-sm"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <%= form.label :partner_id, 'Praticante', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.collection_select :partner_id, Partner.all, :id, :full_name, prompt: "Selecione o praticante", class: "form-select w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :activity, 'Atividade', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :activity, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :date, 'Data', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <div>
+          <%= form.label :weapon_id, 'Arma', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.collection_select :weapon_id, @weapons, :id, :friendly_name, prompt: "Selecione a arma", class: "form-select w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :ammo_amount, 'Quantidade de munição', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :ammo_amount, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :sheet, 'Ficha', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :sheet, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700", min: 1 %>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Salvar Alterações", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Cancelar', events_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
+  </div>
+</div>

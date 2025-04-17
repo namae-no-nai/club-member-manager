@@ -12,6 +12,19 @@ class PartnersController < ApplicationController
     end
   end
 
+  def edit
+    @partner = Partner.find params[:id]
+  end
+
+  def update
+    @partner = Partner.find(params[:id])
+    if @partner.update(partner_params)
+      redirect_to last_records_path, notice: 'Sócio atualizado com sucesso.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def partner_params

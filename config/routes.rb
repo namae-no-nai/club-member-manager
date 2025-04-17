@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "events#index"
-  resources :events, only: %i[ index new create ] do
+  resources :events, only: %i[ index new edit update create ] do
     collection do
       get "register/:partner_id", to: "events#register", as: "register"
       get :filter
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
 
   resources :weapons, only: %i[ index new create ]
 
-  resources :partners, only: %i[ new create ] do
+  resources :partners, only: %i[ new edit update create ] do
     collection do
       post :create
       post :webauthn_create_callback

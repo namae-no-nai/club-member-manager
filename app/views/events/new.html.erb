@@ -84,7 +84,7 @@
                       class: "form-select w-full mt-1 p-2 border rounded-md",
                       onchange: "handleActivityChange(this)"
                     } %>
-            
+
               <div id="custom_activity_wrapper" style="<%= form.object.activity.present? && !Event.suggested_activities.include?(form.object.activity) ? '' : 'display: none;' %>" class="mt-2">
                 <%= label_tag :custom_activity, "Digite a atividade:", class: "block text-sm font-medium text-gray-700" %>
                 <%= text_field_tag "practices[]custom_activity", form.object.activity.presence && !Event.suggested_activities.include?(form.object.activity) ? form.object.activity : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático" %>
@@ -116,7 +116,7 @@
   </div>
 </div>
 <script>
-  function handleActivityChange(selectElement) {    
+  function handleActivityChange(selectElement) {
     const wrapper = selectElement.parentElement.querySelector('#custom_activity_wrapper');
     if (selectElement.value === "Outros") {
       wrapper.style.display = "block";

@@ -5,15 +5,6 @@ class EventsController < ApplicationController
 
   def filter;end
 
-  def last_records_one
-  end
-
-  def last_records_two
-  end
-
-  def last_records_three
-  end
-
   def generate_pdf
     @partner = Partner.find_by(registry_certificate: params[:registry_certificate])
     if @partner.blank?
@@ -30,13 +21,12 @@ class EventsController < ApplicationController
   def new
     @partners ||= Partner.all
     @event = Event.new
-    @weapons = @weapons = (@partner&.weapons || []) + (Partner.club.weapons || [])
+    @weapons = @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
     @old_practice = params[:old_practice] == "true"
   end
 
   def create
     update_params
-    debugger
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         event = Event.new(
@@ -48,6 +38,24 @@ class EventsController < ApplicationController
     end
     flash[:notice] = "Registros criados com sucesso."
     redirect_to root_path
+  end
+
+  def edit
+    @event = Event.find params[:id]
+    @partner = @event.partner
+    @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
+  end
+
+
+  def update
+    @event = Event.find(params[:id])
+    if @event.update(event_params)
+      redirect_to events_path, notice: "Registro atualizado com sucesso."
+    else
+      @partner = @event.partner
+      @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   private

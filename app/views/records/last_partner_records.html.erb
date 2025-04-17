@@ -1,10 +1,14 @@
 <%= turbo_frame_tag "last_records" do %>
   <div class="space-y-4">
-    <% Partner.all.each do |partner| %>
+    <% @partners.each do |partner| %>
       <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
         <span class="text-gray-800 font-medium"><%= partner.full_name %></span>
-        <%= link_to "Editar", root_path, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+        <%= link_to "Editar", edit_partner_path(partner),data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
       </div>
     <% end %>
+  </div>
+
+  <div class="mt-6 flex justify-center">
+    <%= paginate @partners, theme: 'tailwind', params: { turbo_frame: "last_records" } %>
   </div>
 <% end %>

@@ -1,15 +1,13 @@
 class Partner < ApplicationRecord
-  # validates :full_name, :cpf, :registry_certificate,
-  #           :registry_certificate_expiration_date,
-  #           :filiation_number, :first_filiation_date,
-  #           presence: true
   validates :cpf, uniqueness: true
   validate :cpf_must_be_valid
   has_many :events
   has_many :credentials
   has_many :weapons
 
-  scope :club, -> { find_by registry_certificate: 66098 }
+  def self.club
+    find_by(registry_certificate: 66098)
+  end
 
   after_initialize do
     self.webauthn_id ||= WebAuthn.generate_user_id
