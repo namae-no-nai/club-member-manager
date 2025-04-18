@@ -2,9 +2,19 @@ class RecordsController < ApplicationController
   def last_records;end
 
   def last_events_records
-    @events = Event.order(created_at: :desc).page(params[:page]).per(1)
+    @events = if params[:partner_id].present?
+      Event.where(partner_id: params[:partner_id]).order(created_at: :desc).page(params[:page]).per(10)
+    else
+      Event.order(created_at: :desc).page(params[:page]).per(10)
+    end
     render layout: false
   end
+
+  def last_weapons_records
+    @weapons = Weapon.where(partner_id: params[:partner_id]).order(created_at: :desc).page(params[:page]).per(1)
+    render layout: false
+  end
+
   def last_partner_records
     @partners = Partner.order(created_at: :desc).page(params[:page]).per(1)
     render layout: false

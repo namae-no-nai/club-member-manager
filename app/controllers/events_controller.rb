@@ -49,7 +49,7 @@ class EventsController < ApplicationController
 
   def update
     @event = Event.find(params[:id])
-    if @event.update(event_params)
+    if @event.update(update_event_params)
       redirect_to events_path, notice: "Registro atualizado com sucesso."
     else
       @partner = @event.partner
@@ -63,6 +63,10 @@ class EventsController < ApplicationController
   def find_partners
     @partners = Partner.where(id: params[:partner_id]).presence
     @new_practice = @partners.present?
+  end
+
+  def update_event_params
+    params.require(:event).permit(:partner_id, :date, :weapon_id, :activity, :ammo_amount)
   end
 
   def practices_params

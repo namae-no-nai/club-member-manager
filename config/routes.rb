@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
 
   get :last_records, to: "records#last_records"
+  get :last_weapons_records, to: "records#last_weapons_records"
   get :last_partner_records, to: "records#last_partner_records"
   get :last_events_records, to: "records#last_events_records"
 
@@ -32,7 +33,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :weapons, only: %i[ index new create ]
+  resources :weapons, only: %i[ index new edit update create ]
 
   resources :partners, only: %i[ new edit update create ] do
     collection do

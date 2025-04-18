@@ -23,6 +23,22 @@ class WeaponsController < ApplicationController
     end
   end
 
+  def edit
+    @weapon = Weapon.find params[:id]
+    @partners = Partner.all
+  end
+
+  def update
+    custom_action
+    @weapon = Weapon.find params[:id]
+    if @weapon.update(weapon_params)
+      flash[:notice] = "Registros criados com sucesso."
+      redirect_to root_path
+    else
+      render :new
+    end
+  end
+
   private
 
   def weapon_params
