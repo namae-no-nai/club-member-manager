@@ -33,7 +33,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :weapons, only: %i[ index new edit update create ]
+  resources :weapons, only: %i[ index new edit update create ] do
+    member do
+      patch :archive
+    end
+  end
 
   resources :partners, only: %i[ new edit update create ] do
     collection do

@@ -1,9 +1,17 @@
 <%= turbo_frame_tag "last_records" do %>
+  <div class="bg-white p-4 rounded-lg shadow mb-4">
+    <%= form_with url: last_events_records_path, method: :get, class: "flex items-center gap-4" do |form| %>
+      <%= form.label :search, 'Buscar:', class: "text-sm font-medium text-gray-700" %>
+      <%= form.text_field :search, placeholder: "Nome do Sócio", class: "flex-1 border border-gray-300 rounded-md px-3 py-1 focus:ring-red-500 focus:border-red-500" %>
+      <%= form.submit "Buscar", class: "bg-red-600 text-white px-4 py-1.5 rounded-md hover:bg-red-700 transition" %>
+    <% end %>
+  </div>
+
   <div class="space-y-4">
     <% @events.each do |event| %>
       <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
         <span class="text-gray-800 font-medium"><%= event.partner.full_name %></span>
-        <span class="text-gray-800 font-medium"><%= event.created_at %></span>
+        <span class="text-gray-800 font-medium"><%= event.created_at.strftime('%d/%m/%Y %H:%M') %></span>
         <%= link_to "Editar", edit_event_path(event), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
       </div>
     <% end %>

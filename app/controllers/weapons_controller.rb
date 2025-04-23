@@ -39,12 +39,25 @@ class WeaponsController < ApplicationController
     end
   end
 
+  def archive
+    @weapon = Weapon.find params[:id]
+    @weapon.update(archive_params)
+
+    redirect_to last_weapons_records_path(partner_id: @weapon.partner.id)
+  end
+
   private
+
+  def archive_params
+    return {archived_at:nil, archived_reason: params.dig(:weapons, :archived_reason)} if @weapon.archived_at?
+
+    {archived_at: Time.current, archived_reason: params.dig(:weapons, :archived_reason)}
+  end
 
   def weapon_params
     params.require(:weapon).permit(
       :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber, :model,
-      :action, :bore_type, :authorized_use
+      :action, :bore_type, :authorized_use, :archived_at, :archived_reason
     )
   end
 
