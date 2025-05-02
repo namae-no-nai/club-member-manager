@@ -17,7 +17,8 @@ class WeaponsController < ApplicationController
     @weapon = Weapon.new(weapon_params)
     if @weapon.save!
       flash[:notice] = "Registros criados com sucesso."
-      redirect_to params[:weapon][:return_to].presence || root_path, notice: 'Arma criada com sucesso.'
+      redirect_to params[:weapon][:return_to].presence ||
+        root_path, notice: 'Arma criada com sucesso.'
     else
       render :new
     end
@@ -49,15 +50,23 @@ class WeaponsController < ApplicationController
   private
 
   def archive_params
-    return {archived_at:nil, archived_reason: params.dig(:weapons, :archived_reason)} if @weapon.archived_at?
+    if @weapon.archived_at?
+      return {archived_at:nil,
+        archived_reason: params.dig(:weapons, :archived_reason)
+      }
+    end
 
-    {archived_at: Time.current, archived_reason: params.dig(:weapons, :archived_reason)}
+    {
+      archived_at: Time.current,
+      archived_reason: params.dig(:weapons, :archived_reason)
+    }
   end
 
   def weapon_params
     params.require(:weapon).permit(
-      :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber, :model,
-      :action, :bore_type, :authorized_use, :archived_at, :archived_reason
+      :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber,
+      :model, :action, :bore_type, :authorized_use,
+      :archived_at, :archived_reason
     )
   end
 

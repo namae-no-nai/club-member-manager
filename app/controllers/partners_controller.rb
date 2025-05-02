@@ -8,12 +8,14 @@ class PartnersController < ApplicationController
 
       if partners.any?
         partners.each(&:save)
-        redirect_to root_path, notice: "#{partners.count} sócios criados com sucesso."
+        redirect_to root_path,
+          notice: "#{partners.count} sócios criados com sucesso."
       else
-        redirect_to bulk_partners_path, alert: "Nenhum parceiro válido encontrado no CSV."
+        redirect_to bulk_partners_path,
+          alert: 'Nenhum parceiro válido encontrado no CSV.'
       end
     else
-      redirect_to bulk_partners_path, alert: "Envie um arquivo CSV."
+      redirect_to bulk_partners_path, alert: 'Envie um arquivo CSV.'
     end
   end
 
@@ -24,7 +26,8 @@ class PartnersController < ApplicationController
   def create
     @partner = Partner.new(partner_params)
     if @partner.save
-      redirect_to params[:return_to] || new_event_path(partner_id: @partner.id, old_practice: true)
+      redirect_to params[:return_to] ||
+        new_event_path(partner_id: @partner.id, old_practice: true)
     else
       render :new
     end
@@ -47,10 +50,10 @@ class PartnersController < ApplicationController
 
   def partner_params
     params.require(:partner).permit(
-    :file,
-    :full_name, :cpf, :registry_certificate,
-    :registry_certificate_expiration_date, :address,
-    :filiation_number, :first_filiation_date
+      :file,
+      :full_name, :cpf, :registry_certificate,
+      :registry_certificate_expiration_date, :address,
+      :filiation_number, :first_filiation_date
     )
   end
 end

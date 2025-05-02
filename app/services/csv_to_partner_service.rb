@@ -15,7 +15,13 @@ class CsvToPartnerService
 
   def process
     partners = []
-    CSV.foreach(@file.path, headers: true, col_sep: ",", encoding: "bom|utf-8") do |row|
+    CSV.foreach(
+        @file.path,
+        headers: true,
+        col_sep: ",",
+        encoding: "bom|utf-8"
+      ) do |row|
+
       attributes = {}
 
       row.headers.each do |header|
@@ -41,7 +47,11 @@ class CsvToPartnerService
   def parse_date(value)
     return nil unless value.is_a?(String) && [8, 10].include?(value.length)
 
-    value.length == 8 ? parse_short_date(value) : Date.strptime(value, "%m/%d/%Y")
+    value.length == 8 ? parse_short_date(value) : parse_long_date(value)
+  end
+
+  def parse_long_date(value)
+    Date.strptime(value, "%m/%d/%Y")
   end
 
   def parse_short_date(value)
