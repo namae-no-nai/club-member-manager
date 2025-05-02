@@ -18,7 +18,7 @@ CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
 
 FROM base AS production
 
-RUN bundle install --without development test
+RUN bundle install --without development
 
 RUN bundle exec rails assets:precompile
 
