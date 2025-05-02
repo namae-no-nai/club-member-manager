@@ -15,6 +15,7 @@ class WeaponsController < ApplicationController
   def create
     custom_action
     @weapon = Weapon.new(weapon_params)
+
     if @weapon.save!
       flash[:notice] = "Registros criados com sucesso."
       redirect_to params[:weapon][:return_to].presence ||

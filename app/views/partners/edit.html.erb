@@ -63,7 +63,7 @@
     <div class="min-h-screen bg-gray-100 p-8">
       <div class="flex space-x-4 border-b-2 border-gray-300 mb-6">
         <%= link_to "Armas", last_weapons_records_path(partner_id: @partner), data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
-        <%= link_to "Eventos", last_events_records_path, data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
+        <%= link_to "Habitualidades", last_events_records_path, data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
       </div>
 
       <%= turbo_frame_tag "last_records" do %>
