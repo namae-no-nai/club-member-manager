@@ -24,4 +24,6 @@ RUN bundle exec rails assets:precompile
 
 ENV RAILS_ENV=production
 
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
+
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
