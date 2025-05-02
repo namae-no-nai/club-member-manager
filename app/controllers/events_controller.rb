@@ -51,7 +51,7 @@ class EventsController < ApplicationController
 
 
   def update
-    @event = Event.find(params[:id])
+    @event = Event.find params[:id]
     if @event.update(update_event_params)
       redirect_to events_path, notice: "Registro atualizado com sucesso."
     else
