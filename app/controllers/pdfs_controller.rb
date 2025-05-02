@@ -7,6 +7,9 @@ class PdfsController < ApplicationController
       image_path: Rails.root.join("public").to_s
     })
 
-    send_data pdf, filename: "document.pdf", type: "application/pdf", disposition: "inline"
+    send_data pdf,
+      filename: "document.pdf",
+      type: "application/pdf",
+      disposition: "inline"
   end
 end

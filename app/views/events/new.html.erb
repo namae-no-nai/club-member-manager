@@ -32,7 +32,7 @@
                                     %>
         </div>
 
-        <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partner_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' if @old_practice %>
+        <%= link_to 'Caso não encontrou o sócio clique aqui para criar um novo', new_partner_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' if @old_practice %>
 
 
         <div>
@@ -64,6 +64,10 @@
                 <%= options_for_select(@weapons.map { |weapon| [ weapon.friendly_name, weapon.id ] }) %>
               </select>
             </div>
+
+            <%= link_to 'Caso não encontrou a arma clique aqui para criar uma nova',
+            new_weapon_path(return_to: new_event_path, partner_id: (@partners.first.id if !@old_practice)),
+            class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
 
             <div>
               <label class="block text-sm font-medium text-gray-700">Quantidade de munição</label>

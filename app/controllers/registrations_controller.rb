@@ -30,7 +30,9 @@ class RegistrationsController < ApplicationController
     partner = Partner.new(session[:current_registration]["partner_attributes"])
 
     begin
-      webauthn_credential.verify(session[:current_registration]["challenge"], user_verification: true)
+      webauthn_credential.verify(
+        session[:current_registration]["challenge"], user_verification: true
+      )
 
       partner.credentials.build(
         webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id),
@@ -42,12 +44,16 @@ class RegistrationsController < ApplicationController
       if partner.save
         sign_in(partner)
 
-        render json: { redirect_to: new_event_path(partner_id: partner.id) }, status: :ok
+        render json: {
+          redirect_to: new_event_path(partner_id: partner.id)
+        }, status: :ok
       else
-        render json: "Couldn't register your Security Key", status: :unprocessable_entity
+        render json: "Couldn't register your Security Key",
+          status: :unprocessable_entity
       end
     rescue WebAuthn::Error => e
-      render json: "Verification failed: #{e.message}", status: :unprocessable_entity
+      render json: "Verification failed: #{e.message}",
+        status: :unprocessable_entity
     ensure
       session.delete(:current_registration)
     end
