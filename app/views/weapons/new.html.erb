@@ -15,15 +15,21 @@
           </ul>
         </div>
       <% end %>
+        <%= form.hidden_field :return_to, value: params[:return_to] %>
 
         <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
           <div>
             <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
-            <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
+<%= form.collection_select :partner_id,
+                           @partners,
+                           :id,
+                           :friendly_name,
+                           { prompt: "Selecione o CR do atirador", selected: params[:partner_id] },
+                           { class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
         </div>
 
-        <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partner_path(return_to: new_weapon_path), class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
-        
+        <%= link_to 'Caso não encontrou o sócio clique aqui para criar um novo', new_partner_path(return_to: new_weapon_path), class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
+
         <div>
           <%= form.label :sigma, 'Sigma', class: "block text-sm font-medium text-gray-700" %>
           <%= form.text_field :sigma, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
@@ -66,22 +72,22 @@
                 class: "form-select w-full mt-1 p-2 border rounded-md",
                 onchange: "handleActionChange(this.value)"
               } %>
-        
+
           <div id="custom_action_wrapper" style="<%= form.object.action.present? && !Weapon.suggested_actions.include?(form.object.action) ? '' : 'display: none;' %>" class="mt-2">
             <%= label_tag :custom_action, "Digite o funcionamento:", class: "block text-sm font-medium text-gray-700" %>
             <%= text_field_tag :custom_action, form.object.action.presence && !Weapon.suggested_actions.include?(form.object.action) ? form.object.action : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático" %>
           </div>
-        </div>        
+        </div>
       </div>
 
-        <div>        
+        <div>
           <%= form.label :bore_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
           <%= form.select :bore_type,
               Weapon.bore_types.keys.map { |type| [type.humanize, type] },
               { selected: form.object.bore_type.presence || 'raiada' },
               class: "form-select w-full mt-1 p-2 border rounded-md" %>
         </div>
-        
+
         <div>
           <%= form.label :authorized_use, 'Arma de uso', class: "block text-sm font-medium text-gray-700" %>
           <%= form.select :authorized_use,
@@ -92,7 +98,7 @@
 
       <div class="mt-6 flex justify-between">
         <%= form.submit "Registrar Arma", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
-        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+        <%= link_to 'Voltar', params[:return_to] || root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
       </div>
     <% end %>
   </div>
@@ -105,7 +111,7 @@
       wrapper.style.display = "block";
     } else {
       wrapper.style.display = "none";
-      document.getElementById("custom_action").value = ""; // limpa se trocar
+      document.getElementById("custom_action").value = "";
     }
   }
 </script>

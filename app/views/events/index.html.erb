@@ -25,10 +25,16 @@
     <% end %>
   </div>
 
-  <div>
+  <div class="flex space-x-12">
     <%= link_to last_records_path, class: "block text-center" do %>
       <button class="w-80 h-20 bg-yellow-500 text-black rounded-lg shadow-lg hover:bg-yellow-100 transition duration-300">
         Listar e editar Sócios, Eventos e Armas
+      </button>
+    <% end %>
+
+    <%= link_to bulk_partners_path, class: "block text-center" do %>
+      <button class="w-80 h-20 border-2 border-red-500 bg-white text-black rounded-lg shadow-lg hover:bg-red-100 transition duration-300">
+        Criar sócios por PDF
       </button>
     <% end %>
   </div>

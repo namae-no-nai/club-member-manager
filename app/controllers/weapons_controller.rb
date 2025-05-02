@@ -17,7 +17,7 @@ class WeaponsController < ApplicationController
     @weapon = Weapon.new(weapon_params)
     if @weapon.save!
       flash[:notice] = "Registros criados com sucesso."
-      redirect_to root_path
+      redirect_to params[:weapon][:return_to].presence || root_path, notice: 'Arma criada com sucesso.'
     else
       render :new
     end

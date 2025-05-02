@@ -41,10 +41,12 @@ Rails.application.routes.draw do
 
   resources :partners, only: %i[ new edit update create ] do
     collection do
+      get :bulk
+      post :csv_create
       post :create
       post :webauthn_create_callback
     end
   end
 
-  get "/pdfs/generate", to: "pdfs#document"
+  get "/csv/generate", to: "csv#document"
 end

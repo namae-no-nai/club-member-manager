@@ -1,4 +1,22 @@
 class PartnersController < ApplicationController
+  def bulk_partner
+  end
+
+  def csv_create
+    if params[:file].present?
+      partners = CsvToPartnerService.new(params[:file]).process
+
+      if partners.any?
+        partners.each(&:save)
+        redirect_to root_path, notice: "#{partners.count} sócios criados com sucesso."
+      else
+        redirect_to bulk_partners_path, alert: "Nenhum parceiro válido encontrado no CSV."
+      end
+    else
+      redirect_to bulk_partners_path, alert: "Envie um arquivo CSV."
+    end
+  end
+
   def new
     @partner = Partner.new
   end
@@ -29,6 +47,7 @@ class PartnersController < ApplicationController
 
   def partner_params
     params.require(:partner).permit(
+    :file,
     :full_name, :cpf, :registry_certificate,
     :registry_certificate_expiration_date, :address,
     :filiation_number, :first_filiation_date

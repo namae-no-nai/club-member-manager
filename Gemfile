@@ -14,6 +14,7 @@ gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
+
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 gem "solid_cache"
