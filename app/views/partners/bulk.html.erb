@@ -5,7 +5,7 @@
       <p class="mt-2 text-gray-600">Faça upload de um arquivo CSV para cadastrar novos sócios automaticamente.</p>
     </div>
 
-    <%= form_with url: csv_create_partners_path, local: true, html: { multipart: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto" } do |form| %>
+    <%= form_with url: csv_create_partners_path,data: { turbo: false }, local: true, html: { multipart: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto" } do |form| %>
       <% if flash[:alert] %>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           <strong class="font-bold">Erro:</strong>
@@ -23,7 +23,7 @@
       <div class="grid grid-cols-1 gap-4">
         <div>
           <%= form.label :file, "Arquivo CSV", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.file_field :file, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <%= form.file_field :file, class: "form-input w-full mt-1 p-2 border rounded-md", accept: ".csv" %>
         </div>
 
         <div class="mt-6 flex justify-between">

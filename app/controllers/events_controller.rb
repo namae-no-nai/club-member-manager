@@ -26,6 +26,9 @@ class EventsController < ApplicationController
     @event = Event.new
     @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
     @old_practice = params[:old_practice] == "true"
+    return_to_params = { old_practice: @old_practice }
+    return_to_params[:partner_id] = @partners.first.id unless @old_practice
+    @return_to = new_event_path(return_to_params)
   end
 
   def create

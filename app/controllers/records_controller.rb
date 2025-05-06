@@ -38,8 +38,7 @@ class RecordsController < ApplicationController
            .where("LOWER(partners.full_name) LIKE ?", search_term)
            .order(created_at: :desc)
            .page(params[:page]).per(10)
-    end
-    if params[:partner_id].present?
+    elsif params[:partner_id].present?
       Event.where(partner_id: params[:partner_id])
            .order(created_at: :desc)
            .page(params[:page]).per(10)

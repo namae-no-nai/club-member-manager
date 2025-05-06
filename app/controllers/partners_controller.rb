@@ -5,17 +5,19 @@ class PartnersController < ApplicationController
   def csv_create
     if params[:file].present?
       partners = CsvToPartnerService.new(params[:file]).process
-
-      if partners.any?
-        partners.each(&:save)
+      valid_partners = partners.select(&:valid?)
+  
+      if valid_partners.any?
+        valid_partners.each(&:save)
         redirect_to root_path,
-          notice: "#{partners.count} sócios criados com sucesso."
+          notice: "#{valid_partners.count} sócios criados com sucesso."
       else
-        redirect_to bulk_partners_path,
-          alert: 'Nenhum parceiro válido encontrado no CSV.'
+        flash.now[:alert] = 'Nenhum parceiro válido encontrado no CSV.'
+        render :bulk
       end
     else
-      redirect_to bulk_partners_path, alert: 'Envie um arquivo CSV.'
+      flash.now[:alert] = 'Envie um arquivo CSV.'
+      render :bulk
     end
   end
 
