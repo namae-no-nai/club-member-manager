@@ -9,9 +9,9 @@
 
   <div class="space-y-4">
     <% @partners.each do |partner| %>
-      <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
-        <span class="text-gray-800 font-medium"><%= partner.full_name %></span>
-        <span class="text-gray-800 font-medium"><%= partner.filiation_number %></span>
+      <div class=" flex items-center justify-between bg-white p-4 rounded-lg shadow">
+        <span class="w-1/3 text-gray-800 font-medium"><%= partner.full_name %></span>
+        <span class="w-1/3 text-gray-800 font-medium"><%= partner.filiation_number %></span>
 
         <%= link_to "Editar", edit_partner_path(partner),data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
       </div>

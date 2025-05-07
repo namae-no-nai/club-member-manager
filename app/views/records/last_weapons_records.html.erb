@@ -2,10 +2,11 @@
   <div class="space-y-4">
     <% @weapons.each do |weapon| %>
       <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
-        <span class="text-gray-800 font-medium"><%= weapon.brand %></span>
+        <span class="w-1/4 text-gray-800 font-medium"><%= weapon.brand %></span>
+        <span class="w-1/4 text-gray-800 font-medium"><%= weapon.serial_number %></span>
 
-        <div class="flex items-center space-x-2">
-          <label class="inline-flex items-center cursor-pointer">
+
+          <label class="w-1/4 inline-flex items-center cursor-pointer">
             <input 
               type="checkbox" 
               <%= "checked" if !weapon.archived_at? %>
@@ -16,7 +17,6 @@
           </label>
 
           <%= link_to "Editar", edit_weapon_path(weapon), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
-        </div>
       </div>
     <% end %>
   </div>
