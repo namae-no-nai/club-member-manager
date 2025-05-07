@@ -15,13 +15,22 @@ class WeaponsController < ApplicationController
   def create
     custom_action
     @weapon = Weapon.new(weapon_params)
-
-    if @weapon.save!
-      flash[:notice] = "Registros criados com sucesso."
-      redirect_to params[:weapon][:return_to].presence ||
-        root_path, notice: 'Arma criada com sucesso.'
+  
+    if @weapon.save
+      # Respond to Turbo or AJAX
+      respond_to do |format|
+        format.html do
+          flash[:notice] = "Registros criados com sucesso."
+          redirect_to params[:weapon][:return_to].presence || root_path, notice: 'Arma criada com sucesso.'
+        end
+        format.json { render json: @weapon, status: :created }
+      end
     else
-      render :new
+      @partners = Partner.all
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: { errors: @weapon.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
