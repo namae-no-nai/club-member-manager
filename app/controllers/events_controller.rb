@@ -33,17 +33,25 @@ class EventsController < ApplicationController
 
   def create
     update_params
+    @event = nil
+  
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
-        event = Event.new(
-          event_params.merge(practice)
-        )
-
-        event.save!
+        @event = Event.new(event_params.merge(practice))
+        unless @event.save
+          debugger
+          @partners = Partner.all
+          @partner = Partner.find_by(id: @event.partner_id)
+          @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
+          @old_practice = params[:old_practice] == "true"
+          flash.now[:alert] = "Por favor, corrija os erros abaixo."
+          render :new, status: :unprocessable_entity
+          return
+        end
       end
     end
-    flash[:notice] = "Registros criados com sucesso."
-    redirect_to root_path
+
+    redirect_to root_path, notice: "Registros criados com sucesso."
   end
 
   def edit
