@@ -10,37 +10,72 @@ pt-BR:
       event: "Evento"
     attributes:
       event:
-        partner_id: "Parceiro"
+        partner_id: "Sócio"
         weapon_id: "Arma"
         activity: "Atividade"
         date: "Data"
         ammo_amount: "Quantidade de Munição"
         sheet: "Folha"
-        weapon_id:
-          blank: "Arma não pode estar em branco"
-        activity:
-          blank: "Atividade não pode estar em branco"
-        date:
-          blank: "Data não pode estar em branco"
-        ammo_amount:
-          blank: "Quantidade de munição não pode estar em branco"
-          not_a_number: "A quantidade de munição deve ser um número"
-          greater_than_or_equal_to: "A quantidade de munição deve ser maior ou igual a 0"
-        sheet:
-          blank: "Folha não pode estar em branco"
-          not_a_number: "A folha deve ser um número"
-          equal_to: "A folha deve ser igual a 1"
+      weapon:
+        weapon_types:
+          pistola: "Pistola"
+          revolver: "Revólver"
+          carabina: "Carabina"
+          espingarda: "Espingarda"
+        bore_type:
+          lisa: "Lisa"
+          raiada: "Raiada"
+        action:
+          semi_automatico: "Semi-automático"
+          repeticao: "Repetição"
 
   helpers:
+    select:
+      prompt: "Por favor selecione"
     submit:
-      create: "Criar Evento"
-      update: "Atualizar Evento"
-    errors:
-      messages:
-        record_invalid: 'A validação falhou: %{errors}'
-        restrict_dependent_destroy:
-          has_one: "Não é possível excluir o registro pois existe um %{record} dependente"
-          has_many: "Não é possível excluir o registro pois existem %{record} dependentes"
+      create: "Criar %{model}"
+      submit: "Salvar %{model}"
+      update: "Atualizar %{model}"
+
+  errors:
+    format: "%{attribute} %{message}"
+    messages:
+      accepted: "deve ser aceito"
+      blank: "não pode ficar em branco"
+      confirmation: "não é igual a %{attribute}"
+      empty: "não pode ficar vazio"
+      equal_to: "deve ser igual a %{count}"
+      even: "deve ser par"
+      exclusion: "não está disponível"
+      greater_than: "deve ser maior que %{count}"
+      greater_than_or_equal_to: "deve ser maior ou igual a %{count}"
+      in: "deve estar em %{count}"
+      inclusion: "não está incluído na lista"
+      invalid: "não é válido"
+      less_than: "deve ser menor que %{count}"
+      less_than_or_equal_to: "deve ser menor ou igual a %{count}"
+      model_invalid: 'A validação falhou: %{errors}'
+      not_a_number: "não é um número"
+      not_an_integer: "não é um número inteiro"
+      odd: "deve ser ímpar"
+      other_than: "deve ser diferente de %{count}"
+      present: "deve ficar em branco"
+      required: "é obrigatório(a)"
+      taken: "já está em uso"
+      too_long:
+        one: "é muito longo (máximo: %{count} caracter)"
+        other: "é muito longo (máximo: %{count} caracteres)"
+      too_short:
+        one: "é muito curto (mínimo: %{count} caracter)"
+        other: "é muito curto (mínimo: %{count} caracteres)"
+      wrong_length:
+        one: "não possui o tamanho esperado (%{count} caracter)"
+        other: "não possui o tamanho esperado (%{count} caracteres)"
+    template:
+      body: "Por favor, verifique o(s) seguinte(s) campo(s):"
+      header:
+        one: "Não foi possível gravar %{model}: %{count} erro"
+        other: "Não foi possível gravar %{model}: %{count} erros"
 
   date:
     abbr_day_names:
@@ -52,6 +87,7 @@ pt-BR:
       - sex
       - sáb
     abbr_month_names:
+      - ""
       - jan
       - fev
       - mar
@@ -77,6 +113,7 @@ pt-BR:
       long: "%d de %B de %Y"
       short: "%d de %B"
     month_names:
+      - ""
       - janeiro
       - fevereiro
       - março
@@ -93,6 +130,14 @@ pt-BR:
       - :day
       - :month
       - :year
+
+  time:
+    am: "AM"
+    pm: "PM"
+    formats:
+      default: "%a, %d de %B de %Y, %H:%M:%S %z"
+      long: "%d de %B de %Y, %H:%M"
+      short: "%d de %B, %H:%M"
 
   datetime:
     distance_in_words:
@@ -141,54 +186,6 @@ pt-BR:
       month: "Mês"
       year: "Ano"
 
-  errors:
-    format: "%{attribute} %{message}"
-    messages:
-      accepted: "deve ser aceito"
-      blank: "não pode ficar em branco"
-      confirmation: "não é igual a %{attribute}"
-      empty: "não pode ficar vazio"
-      equal_to: "deve ser igual a %{count}"
-      even: "deve ser par"
-      exclusion: "não está disponível"
-      greater_than: "deve ser maior que %{count}"
-      greater_than_or_equal_to: "deve ser maior ou igual a %{count}"
-      in: "deve estar em %{count}"
-      inclusion: "não está incluído na lista"
-      invalid: "não é válido"
-      less_than: "deve ser menor que %{count}"
-      less_than_or_equal_to: "deve ser menor ou igual a %{count}"
-      model_invalid: 'A validação falhou: %{errors}'
-      not_a_number: "não é um número"
-      not_an_integer: "não é um número inteiro"
-      odd: "deve ser ímpar"
-      other_than: "deve ser diferente de %{count}"
-      present: "deve ficar em branco"
-      required: "é obrigatório(a)"
-      taken: "já está em uso"
-      too_long:
-        one: "é muito longo (máximo: %{count} caracter)"
-        other: "é muito longo (máximo: %{count} caracteres)"
-      too_short:
-        one: "é muito curto (mínimo: %{count} caracter)"
-        other: "é muito curto (mínimo: %{count} caracteres)"
-      wrong_length:
-        one: "não possui o tamanho esperado (%{count} caracter)"
-        other: "não possui o tamanho esperado (%{count} caracteres)"
-    template:
-      body: "Por favor, verifique o(s) seguinte(s) campo(s):"
-      header:
-        one: "Não foi possível gravar %{model}: %{count} erro"
-        other: "Não foi possível gravar %{model}: %{count} erros"
-
-  helpers:
-    select:
-      prompt: "Por favor selecione"
-    submit:
-      create: "Criar %{model}"
-      submit: "Salvar %{model}"
-      update: "Atualizar %{model}"
-
   number:
     currency:
       format:
@@ -224,23 +221,6 @@ pt-BR:
             one: "trilhão"
             other: "trilhões"
           unit: ""
-      format:
-        delimiter: ""
-        precision: 3
-        significant: true
-        strip_insignificant_zeros: true
-      storage_units:
-        format: "%n %u"
-        units:
-          byte:
-            one: "Byte"
-            other: "Bytes"
-          eb: "EB"
-          gb: "GB"
-          kb: "KB"
-          mb: "MB"
-          pb: "PB"
-          tb: "TB"
     percentage:
       format:
         delimiter: "."
@@ -248,17 +228,3 @@ pt-BR:
     precision:
       format:
         delimiter: "."
-
-  support:
-    array:
-      last_word_connector: " e "
-      two_words_connector: " e "
-      words_connector: ", "
-
-  time:
-    am: "am"
-    formats:
-      default: "%a, %d de %B de %Y, %H:%M:%S %z"
-      long: "%d de %B de %Y, %H:%M"
-      short: "%d de %B, %H:%M"
-    pm: "pm"

@@ -1,0 +1,36 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Importar Sócios via CSV</h1>
+      <p class="mt-2 text-gray-600">Faça upload de um arquivo CSV para cadastrar novos sócios automaticamente.</p>
+    </div>
+
+    <%= form_with url: csv_create_partners_path,data: { turbo: false }, local: true, html: { multipart: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto" } do |form| %>
+      <% if flash[:alert] %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold">Erro:</strong>
+          <span class="block sm:inline"><%= flash[:alert] %></span>
+        </div>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold">Sucesso:</strong>
+          <span class="block sm:inline"><%= flash[:notice] %></span>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <%= form.label :file, "Arquivo CSV", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.file_field :file, class: "form-input w-full mt-1 p-2 border rounded-md", accept: ".csv" %>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+          <%= form.submit "Enviar CSV", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+          <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

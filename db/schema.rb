@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_18_003358) do
   create_table "credentials", force: :cascade do |t|
     t.string "webauthn_id"
     t.string "public_key"
+    t.string "nickname"
     t.integer "sign_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -27,7 +28,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
     t.string "activity"
     t.date "date"
     t.integer "ammo_amount"
-    t.integer "sheet"
+    t.integer "sheet", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -50,16 +51,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_223557) do
     t.date "first_filiation_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "webauthn_id"
+    t.string "webauthn_id"
   end
 
   create_table "weapons", force: :cascade do |t|
-    t.string "caliber"
-    t.string "category"
     t.string "sigma"
+    t.string "serial_number"
+    t.integer "weapon_type"
+    t.string "brand"
+    t.string "caliber"
+    t.string "model"
+    t.string "action"
+    t.integer "bore_type"
+    t.integer "authorized_use"
+    t.integer "partner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "archived_at"
+    t.string "archived_reason"
+    t.index ["partner_id"], name: "index_weapons_on_partner_id"
   end
 
   add_foreign_key "credentials", "partners"
+  add_foreign_key "weapons", "partners"
 end

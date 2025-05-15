@@ -15,26 +15,47 @@
           </ul>
         </div>
       <% end %>
-
       <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
         <div>
           <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
+          <%= form.collection_select :partner_id,
+                                     @partners,
+                                     :id,
+                                     :friendly_name,
+                                     {},
+                                     {
+                                        prompt: "Selecione o CR do atirador",
+                                        class: "form-select w-full mt-1 p-2 border rounded-md select2 partner-select",
+                                        disabled: !@old_practice,
+                                        data: { action: "change->nested-form#updateWeapons" }
+                                      }
+                                    %>
         </div>
 
-        <%= link_to 'Caso não encontrou usuário clique aqui para criar um novo', new_partners_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
+        <%= link_to 'Caso não encontrou o sócio clique aqui para criar um novo', new_partner_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' if @old_practice %>
+
 
         <div>
-          <%= form.label :date,'Data da pratica', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <%= form.label :date,'Data da pratica', class: "block text-sm font-medium text-gray-700"%>
+          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md", disabled: !@old_practice  %>
         </div>
 
         <div id="weapons">
           <div class="weapon-wrapper grid grid-cols-1 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700" for="activity">Treino ou Campeonato</label>
-              <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Insira a atividade">
-            </div>
+            <%= form.label :activity, 'Atividade', class: "block text-sm font-medium text-gray-700" %>
+            <%= select_tag "practices[][activity]",
+                  options_for_select(Event.suggested_activities.map { |type| [type.humanize, type] }, 
+                    form.object.activity.presence || 'treino'),
+                  {
+                    id: "activity",
+                    class: "form-select w-full mt-1 p-2 border rounded-md",
+                    onchange: "handleActivityChange(this)"
+                  } %>
+            
+              <div id="custom_activity_wrapper" style="<%= form.object.activity.present? && !Event.suggested_activities.include?(form.object.activity) ? '' : 'display: none;' %>" class="mt-2">
+                <%= label_tag :custom_activity, "Digite a atividade:", class: "block text-sm font-medium text-gray-700" %>
+                <%= text_field_tag "practices[]custom_activity", form.object.activity.presence && !Event.suggested_activities.include?(form.object.activity) ? form.object.activity : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático" %>
+              </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700">Arma</label>
@@ -43,6 +64,10 @@
                 <%= options_for_select(@weapons.map { |weapon| [ weapon.friendly_name, weapon.id ] }) %>
               </select>
             </div>
+
+            <%= link_to 'Caso não encontrou a arma clique aqui para criar uma nova',
+            new_weapon_path(return_to: @return_to),
+            class: 'text-blue-600 hover:text-blue-800 font-medium underline' %>
 
             <div>
               <label class="block text-sm font-medium text-gray-700">Quantidade de munição</label>
@@ -54,8 +79,20 @@
         <template id='weapon-wrapper-template'>
           <div class="weapon-wrapper grid grid-cols-1 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700" for="activity">Treino ou Campeonato</label>
-              <input type="text" name="practices[][activity]" id="activity" class="form-input w-full mt-1 p-2 border rounded-md" placeholder="Insira a atividade">
+              <%= form.label :activity, 'Atividade', class: "block text-sm font-medium text-gray-700" %>
+              <%= select_tag "practices[][activity]",
+                    options_for_select(Event.suggested_activities.map { |type| [type.humanize, type] }, 
+                      form.object.activity.presence || 'treino'),
+                    {
+                      id: "activity",
+                      class: "form-select w-full mt-1 p-2 border rounded-md",
+                      onchange: "handleActivityChange(this)"
+                    } %>
+
+              <div id="custom_activity_wrapper" style="<%= form.object.activity.present? && !Event.suggested_activities.include?(form.object.activity) ? '' : 'display: none;' %>" class="mt-2">
+                <%= label_tag :custom_activity, "Digite a atividade:", class: "block text-sm font-medium text-gray-700" %>
+                <%= text_field_tag "practices[]custom_activity", form.object.activity.presence && !Event.suggested_activities.include?(form.object.activity) ? form.object.activity : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático" %>
+              </div>
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">Arma</label>
@@ -74,6 +111,7 @@
         </template>
         <button data-action="nested-form#add">Adicionar outra atividade</button>
       </div>
+      <%= hidden_field_tag :old_practice, @old_practice if @old_practice.present? %>
 
       <div class="mt-6 flex justify-between">
         <%= form.submit "Registrar a Habitualidade", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
@@ -82,3 +120,14 @@
     <% end %>
   </div>
 </div>
+<script>
+  function handleActivityChange(selectElement) {
+    const wrapper = selectElement.parentElement.querySelector('#custom_activity_wrapper');
+    if (selectElement.value === "Outros") {
+      wrapper.style.display = "block";
+    } else {
+      wrapper.style.display = "none";
+      selectElement.parentElement.querySelector('#custom_activity').value = "";
+    }
+  }
+</script>

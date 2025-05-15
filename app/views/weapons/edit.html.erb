@@ -1,0 +1,110 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Editar Arma</h1>
+    </div>
+
+    <%= form_with(model: @weapon, url: weapon_path(@weapon), method: :patch, local: true, data: { controller: 'credentials', action: "ajax:success->credentials#create ajax:error->credentials#error" }, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <% if @weapon.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold"><%= pluralize(@weapon.errors.count, "erro") %> impediram o salvamento:</strong>
+          <ul class="mt-2">
+            <% @weapon.errors.full_messages.each do |message| %>
+              <li class="text-sm"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-2 gap-4" data-controller="nested-form">
+        <div>
+          <%= form.label :partner_id, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.collection_select :partner_id, @partners, :id, :friendly_name, {}, { prompt: "Selecione o CR do atirador", class: "form-select w-full mt-1 p-2 border rounded-md select2" } %>
+        </div>
+
+        <div>
+          <%= form.label :sigma, 'Sigma', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :sigma, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :serial_number, 'Nº de série', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :serial_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :weapon_type, 'Tipo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :weapon_type,
+              Weapon.weapon_types.keys.map { |type| [type.humanize, type] },
+              { selected: form.object.weapon_type },
+              class: "form-select w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <div>
+          <%= form.label :brand, 'Marca', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :brand, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :caliber, 'Calibre', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :caliber, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :model, 'Modelo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :model, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :action, 'Funcionamento', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :action,
+              Weapon.suggested_actions.map { |type| [type.humanize, type] },
+              { selected: form.object.action.in?(Weapon.suggested_actions) ? form.object.action : 'outros' },
+              {
+                class: "form-select w-full mt-1 p-2 border rounded-md",
+                onchange: "handleActionChange(this.value)"
+              } %>
+
+          <div id="custom_action_wrapper" style="<%= form.object.action.present? && !Weapon.suggested_actions.include?(form.object.action) ? '' : 'display: none;' %>" class="mt-2">
+            <%= label_tag :custom_action, "Digite o funcionamento:", class: "block text-sm font-medium text-gray-700" %>
+            <%= text_field_tag :custom_action, !Weapon.suggested_actions.include?(form.object.action) ? form.object.action : '', class: "form-input w-full mt-1 p-2 border rounded-md", placeholder: "Ex: automático", id: "custom_action" %>
+          </div>
+        </div>
+
+        <div>
+          <%= form.label :bore_type, 'Tipo de alma', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :bore_type,
+              Weapon.bore_types.keys.map { |type| [type.humanize, type] },
+              { selected: form.object.bore_type },
+              class: "form-select w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <div>
+          <%= form.label :authorized_use, 'Uso autorizado', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.select :authorized_use,
+              Weapon.authorized_uses.keys.map { |type| [type.humanize, type] },
+              { selected: form.object.authorized_use },
+              class: "form-select w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+          <%= form.submit "Salvar Alterações", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+          <%= link_to 'Cancelar', weapons_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  function handleActionChange(value) {
+    const wrapper = document.getElementById("custom_action_wrapper");
+    if (value === "outros") {
+      wrapper.style.display = "block";
+    } else {
+      wrapper.style.display = "none";
+      const input = document.getElementById("custom_action");
+      if (input) input.value = "";
+    }
+  }
+</script>

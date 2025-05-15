@@ -63,5 +63,5 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   config.hosts.clear
 
-  config.webauthn_origin = 'http://localhost:3000'
+  config.webauthn_origin = "http://localhost:3000"
 end

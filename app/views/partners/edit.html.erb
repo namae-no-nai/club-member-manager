@@ -1,0 +1,74 @@
+<div class="flex justify-center items-center min-h-screen gap-2">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Editar Socio</h1>
+    </div>
+
+    <%= form_with(model: @partner, url: partner_path(@partner, return_to: params[:return_to]), method: :patch, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <% if @partner.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold"><%= pluralize(@partner.errors.count, "erro") %> impediram a atualização:</strong>
+          <ul class="mt-2">
+            <% @partner.errors.full_messages.each do |message| %>
+              <li class="text-sm"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 gap-4" data-controller="nested-form">
+        <div>
+          <%= form.label :full_name, 'Nome completo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :full_name, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :cpf, 'CPF', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :cpf, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate, 'CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :registry_certificate, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate_expiration_date, 'Data de expiração CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :registry_certificate_expiration_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <div>
+          <%= form.label :address, 'Endereço', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :address, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :filiation_number, 'Número de filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :filiation_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :first_filiation_date, 'Data da primeira filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Salvar Alterações", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Cancelar', last_records_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
+  </div>
+  <div class="w-full max-w-2xl">
+    <div class="min-h-screen bg-gray-100 p-8">
+      <div class="flex space-x-4 border-b-2 border-gray-300 mb-6">
+        <%= link_to "Armas", last_weapons_records_path(partner_id: @partner), data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
+        <%= link_to "Habitualidades", last_events_records_path(partner_id: @partner.id), data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
+      </div>
+
+      <%= turbo_frame_tag "last_records" do %>
+        <p class="text-gray-500">Selecione uma aba para visualizar os dados.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

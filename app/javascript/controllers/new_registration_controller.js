@@ -13,8 +13,8 @@ export default class extends Controller {
 
     // Registration
     if (credentialOptions["user"]) {
-      var credential_nickname = "teste" // event.target.querySelector("input[name='registration[nickname]']").value;
-      var callback_url = `/partners/register?credential_nickname=${credential_nickname}`
+      var credential_nickname = "index finger";
+      var callback_url = `/registrations/callback?credential_nickname=${credential_nickname}`
 
       Credential.create(encodeURI(callback_url), credentialOptions);
     }
@@ -22,7 +22,7 @@ export default class extends Controller {
 
   error(event) {
     let response = event.detail[0];
-    let usernameField = new MDCTextField( "deu ruim"); //this.usernameFieldTarget);
+    let usernameField = new MDCTextField(this.usernameFieldTarget);
     usernameField.valid = false;
     usernameField.helperTextContent = response["errors"][0];
   }

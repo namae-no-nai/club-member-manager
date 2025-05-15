@@ -1,0 +1,80 @@
+<%= turbo_frame_tag "last_records" do %>
+  <div class="space-y-4">
+    <% @weapons.each do |weapon| %>
+      <div class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+        <span class="w-1/4 text-gray-800 font-medium"><%= weapon.brand %></span>
+        <span class="w-1/4 text-gray-800 font-medium"><%= weapon.serial_number %></span>
+
+
+          <label class="w-1/4 inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              <%= "checked" if !weapon.archived_at? %>
+              class="sr-only peer" 
+              onclick="openModal(<%= weapon.id %>, event)"
+            >
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+          </label>
+
+          <%= link_to "Editar", edit_weapon_path(weapon), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div
+    id="archive_modal"
+    class="fixed inset-0 z-50 grid place-content-center bg-black/50 hidden p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+  >
+    <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+      <h2 id="modalTitle" class="text-xl font-bold text-gray-900 sm:text-2xl"></h2>
+
+      <%= form_with(model: Weapon.new, method: :patch) do |form| %>
+        <div class="mt-4">
+          <%= form.label :archived_reason, 'Motivo', class: "block text-sm font-medium text-gray-700"  %>
+          <%= form.text_field :archived_reason, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <footer class="mt-6 flex justify-end gap-2">
+          <button
+            type="button"
+            class="rounded bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+            onclick="closeModal()"
+          >
+            Cancelar
+          </button>
+
+          <button
+            class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Confirmar
+          </button>
+        </footer>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-center">
+    <%= paginate @weapons, theme: 'tailwind', params: { turbo_frame: "last_records" } %>
+  </div>
+  <script>
+  function openModal(id, event) {
+    event.preventDefault();
+    let modal = document.getElementById('archive_modal');
+    let toggle = event.target.checked ? 'Ativar' : 'Arquivar';
+    modal.querySelector('#modalTitle').innerText = `${toggle} sua arma`
+    modal.querySelector('form').setAttribute('action', `/weapons/${id}/archive`);
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal(event) {
+    let modal = document.getElementById('archive_modal');
+    modal.querySelector('form').reset();
+    modal.classList.add('hidden');
+  }
+</script>
+<% end %>
+
+

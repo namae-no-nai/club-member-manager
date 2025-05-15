@@ -10,16 +10,17 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 gem "jbuilder"
 gem "cpf_cnpj"
-gem 'webauthn'
+gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
+
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
-
+gem "kaminari"
 gem "bootsnap", require: false
 
 gem "kamal", require: false

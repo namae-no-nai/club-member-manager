@@ -1,20 +1,53 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-12">
+    <% if flash[:alert] %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Erro:</strong>
+        <span class="block sm:inline"><%= flash[:alert] %></span>
+      </div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Sucesso:</strong>
+        <span class="block sm:inline"><%= flash[:notice] %></span>
+      </div>
+    <% end %>
   <div class="flex space-x-12">
-    <%= link_to new_partners_path, class: "block text-center" do %>
+    <%= link_to new_session_path, class: "block text-center" do %>
       <button class="w-40 h-40 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition duration-300">
         Registrar Novas Habitualidades
       </button>
     <% end %>
 
-    <%= link_to new_event_path, class: "block text-center" do %>
+    <%= link_to new_event_path(old_practice: true), class: "block text-center" do %>
       <button class="w-40 h-40 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-600 transition duration-300">
         Registrar Habitualidade Anteriores
+      </button>
+    <% end %>
+
+    <%= link_to new_weapon_path, class: "block text-center" do %>
+      <button class="w-40 h-40 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 transition duration-300">
+        Registrar Arma
       </button>
     <% end %>
 
     <%= link_to filter_events_path, class: "block text-center" do %>
       <button class="w-40 h-40 border-2 border-red-500 bg-white text-black rounded-lg shadow-lg hover:bg-red-100 transition duration-300">
         Gerar PDF
+      </button>
+    <% end %>
+  </div>
+
+  <div class="flex space-x-12">
+    <%= link_to last_records_path, class: "block text-center" do %>
+      <button class="w-80 h-20 bg-yellow-500 text-black rounded-lg shadow-lg hover:bg-yellow-100 transition duration-300">
+        Listar e editar Sócios, Habitualidades e Armas
+      </button>
+    <% end %>
+
+    <%= link_to bulk_partners_path, class: "block text-center" do %>
+      <button class="w-80 h-20 border-2 border-red-500 bg-white text-black rounded-lg shadow-lg hover:bg-red-100 transition duration-300">
+        Criar sócios por CSV
       </button>
     <% end %>
   </div>
