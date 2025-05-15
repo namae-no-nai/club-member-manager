@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    Ascii85 (2.0.1)
     actioncable (8.0.1)
       actionpack (= 8.0.1)
       activesupport (= 8.0.1)
@@ -75,7 +74,6 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    afm (0.2.2)
     android_key_attestation (0.3.0)
     ast (2.4.2)
     base64 (0.2.0)
@@ -86,7 +84,7 @@ GEM
     bigdecimal (3.1.9)
     bindata (2.5.0)
     bindex (0.8.1)
-    bootsnap (1.18.4)
+    bootsnap (1.18.5)
       msgpack (~> 1.2)
     brakeman (7.0.0)
       racc
@@ -125,7 +123,6 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hashery (2.1.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
@@ -221,12 +218,6 @@ GEM
     parser (3.3.7.1)
       ast (~> 2.4.1)
       racc
-    pdf-reader (2.14.1)
-      Ascii85 (>= 1.0, < 3.0, != 2.0.0)
-      afm (~> 0.2.1)
-      hashery (~> 2.0)
-      ruby-rc4
-      ttfunk
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -316,7 +307,6 @@ GEM
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
-    ruby-rc4 (0.1.5)
     rubyzip (2.4.1)
     safety_net_attestation (0.4.0)
       jwt (~> 2.0)
@@ -382,8 +372,6 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
-    ttfunk (1.8.0)
-      bigdecimal (~> 3.1)
     turbo-rails (2.0.11)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
@@ -443,7 +431,6 @@ DEPENDENCIES
   jbuilder
   kamal
   kaminari
-  pdf-reader
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.1)
