@@ -25,7 +25,7 @@ RUN bundle install --without development
 
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
-ENV RAILS_ENV=production
+ENV RAILS_ENV=production_local
 
 RUN chmod +x /rails/bin/entrypoint
 ENTRYPOINT ["/rails/bin/entrypoint"]

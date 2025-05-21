@@ -14,3 +14,7 @@ test:
 production:
   database: cache
   <<: *default
+
+production_local:
+  database: cache
+  <<: *default

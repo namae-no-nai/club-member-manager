@@ -39,3 +39,20 @@ production:
     <<: *default
     database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
+
+production_local:
+  primary:
+    <<: *default
+    database: storage/production_local.sqlite3
+  cache:
+    <<: *default
+    database: storage/production_local_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/production_local_queue.sqlite3
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: storage/production_local_cable.sqlite3
+    migrations_paths: db/cable_migrate
