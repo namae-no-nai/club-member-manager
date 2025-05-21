@@ -1,5 +1,5 @@
 # docker build -t club-member:prod .
-# docker run -p 3000:3000 -e RAILS_MASTER_KEY=<master_key> -v club-member-data:/rails/storage --name club-member club-member:prod
+# docker run -p 3000:3000 --env-file .env -v club-member-data:/rails/storage --name club-member club-member:prod
 
 FROM ruby:3.3.5-alpine AS base
 
