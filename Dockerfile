@@ -1,5 +1,6 @@
 # docker build -t club-member:prod .
 # docker run -p 3000:3000 --env-file .env -v club-member-data:/rails/storage --name club-member club-member:prod
+# Don't forget to create/fill out the .env file - `cp .example.env .env` in case you don't have one yet
 
 FROM ruby:3.3.5-alpine AS base
 
