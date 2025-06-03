@@ -17,7 +17,7 @@ class EventsController < ApplicationController
     end_date = params[:end_date]
     @events = Event.includes(:weapon)
                     .where(partner_id: @partner.id, date: start_date..end_date)
-                    .order(date: :desc)
+                    .order(date: :asc)
                     .group_by(&:weapon)
   end
 
