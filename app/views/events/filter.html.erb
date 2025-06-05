@@ -1,7 +1,12 @@
 <div class="flex justify-center items-center min-h-screen">
   <div class="w-full max-w-2xl">
     <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Filtrar e Gerar PDF</h1>
-    <%= form_with(url: generate_pdf_events_path, method: :get, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4") do |f| %>
+    <%= form_with(
+        url: generate_pdf_events_path,
+        method: :get,
+        local: true,
+        html: { target: "_blank" },
+        class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4") do |f| %>
       <div>
         <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
         <%= f.number_field :registry_certificate, required: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Insira o certificado de registro" %>

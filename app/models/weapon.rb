@@ -29,7 +29,11 @@ class Weapon < ApplicationRecord
   belongs_to :partner
 
   scope :available, ->(partner) {
-    where(partner_id: [ partner.id, Partner.club.id ]) }
+    where(partner_id: [partner.id, Partner.club.id])
+      .where(archived_at: nil)
+  }
+
+  scope :active, -> { where(archived_at: nil) }
 
   def to_h
     { id:, friendly_name: }

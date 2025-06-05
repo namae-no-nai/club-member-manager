@@ -24,7 +24,7 @@ class EventsController < ApplicationController
   def new
     @partners ||= Partner.all
     @event = Event.new
-    @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
+    @weapons = (@partner&.weapons&.active || []) + (Partner.club&.weapons&.active || [])
     @old_practice = params[:old_practice] == "true"
     return_to_params = { old_practice: @old_practice }
     return_to_params[:partner_id] = @partners.first.id unless @old_practice
@@ -39,7 +39,6 @@ class EventsController < ApplicationController
       practices_params.each do |practice|
         @event = Event.new(event_params.merge(practice))
         unless @event.save
-          debugger
           @partners = Partner.all
           @partner = Partner.find_by(id: @event.partner_id)
           @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
