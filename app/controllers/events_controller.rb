@@ -86,7 +86,7 @@ class EventsController < ApplicationController
 
   def practices_params
     params.permit(
-      practices: [ :weapon_id, :activity, :ammo_amount ]
+      practices: [ :date, :weapon_id, :activity, :ammo_amount ]
     )[:practices]
   end
 
@@ -99,6 +99,6 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:partner_id, :date)
+    params.require(:event).permit(:partner_id)
   end
 end

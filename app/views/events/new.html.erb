@@ -35,13 +35,22 @@
         <%= link_to 'Caso não encontrou o sócio clique aqui para criar um novo', new_partner_path, class: 'text-blue-600 hover:text-blue-800 font-medium underline' if @old_practice %>
 
 
-        <div>
-          <%= form.label :date,'Data da pratica', class: "block text-sm font-medium text-gray-700"%>
-          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md", disabled: !@old_practice  %>
-        </div>
-
         <div id="weapons">
           <div class="weapon-wrapper grid grid-cols-1 gap-4">
+            <div>
+              <%= form.label :date, 'Data da prática', class: "block text-sm font-medium text-gray-700" %>
+              <%= date_select nil, :date, {
+                    start_year: 1925,
+                    end_year: 2125,
+                    default: form.object.date || Date.today,
+                    prefix: "practices[]"
+                  },
+                  { 
+                    class: "form-select mt-2",
+                    disabled: !@old_practice 
+                  } %>
+            </div>
+
             <%= form.label :activity, 'Atividade', class: "block text-sm font-medium text-gray-700" %>
             <%= select_tag "practices[][activity]",
                   options_for_select(Event.suggested_activities.map { |type| [type.humanize, type] }, 
@@ -77,7 +86,21 @@
         </div>
 
         <template id='weapon-wrapper-template'>
-          <div class="weapon-wrapper grid grid-cols-1 gap-4">
+          <div class="weapon-wrapper grid grid-cols-1 gap-4 mt-3">
+            <div>
+              <%= form.label :date, 'Data da prática', class: "block text-sm font-medium text-gray-700" %>
+              <%= date_select nil, :date, {
+                    start_year: 1925,
+                    end_year: 2125,
+                    default: form.object.date || Date.today,
+                    prefix: "practices[]"
+                  },
+                  { 
+                    class: "form-select mt-2",
+                    disabled: !@old_practice
+                  } %>
+            </div>
+
             <div>
               <%= form.label :activity, 'Atividade', class: "block text-sm font-medium text-gray-700" %>
               <%= select_tag "practices[][activity]",
