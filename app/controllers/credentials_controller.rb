@@ -6,16 +6,14 @@ class CredentialsController < ApplicationController
   def index;end
 
   def create
-    challenge = WebAuthn.generate_challenge
-
     create_options = WebAuthn::Credential.options_for_create(
     user: {
       id: current_user.webauthn_id,           # valor binário (ex: 16 bytes random)
-      name: current_user.email,                # ex: "usuario@localhost"
-      display_name: current_user.name          # ex: "Usuário Local"
+      name: current_user.cpf,                # ex: "usuario@localhost"
+      display_name: current_user.cpf          # ex: "Usuário Local"
     },
     rp: {
-      name: "Meu App Local",
+      name: request.host,
       id: request.host                         # domínio atual (ex: localhost)
     },
     pub_key_cred_params: [
@@ -29,7 +27,6 @@ class CredentialsController < ApplicationController
     },
     timeout: 60000,
     attestation: "none",
-    challenge: challenge
   )
 
     session[:current_registration] = { challenge: create_options.challenge }
@@ -43,7 +40,7 @@ class CredentialsController < ApplicationController
     webauthn_credential = WebAuthn::Credential.from_create(params)
 
     begin
-      webauthn_credential.verify(session[:current_registration]["challenge"], user_verification: true)
+      webauthn_credential.verify(session[:current_registration]["challenge"], user_verification: false)
 
       credential = current_user.credentials.find_or_initialize_by(
         webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id)

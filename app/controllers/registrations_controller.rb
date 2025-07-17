@@ -9,16 +9,14 @@ class RegistrationsController < ApplicationController
     @partner = Partner.new(partner_params)
     return render :new unless @partner.valid?
 
-    challenge = WebAuthn.generate_challenge
-
     create_options = WebAuthn::Credential.options_for_create(
       user: {
         id: @partner.webauthn_id,           # valor binário (ex: 16 bytes random)
-        name: @partner.email,                # ex: "usuario@localhost"
-        display_name: @partner.name          # ex: "Usuário Local"
+        name: @partner.cpf,                # ex: "usuario@localhost"
+        display_name: @partner.cpf        # ex: "Usuário Local"
       },
       rp: {
-        name: "Meu App Local",
+        name: request.host,
         id: request.host                         # domínio atual (ex: localhost)
       },
       pub_key_cred_params: [
@@ -33,7 +31,6 @@ class RegistrationsController < ApplicationController
       },
       timeout: 60000,
       attestation: "none",
-      challenge: challenge
     )
 
     session[:current_registration] = { challenge: create_options.challenge, partner_attributes: @partner.attributes }
@@ -49,9 +46,7 @@ class RegistrationsController < ApplicationController
     partner = Partner.new(session[:current_registration]["partner_attributes"])
 
     begin
-      webauthn_credential.verify(
-        session[:current_registration]["challenge"], user_verification: true
-      )
+      webauthn_credential.verify( session[:current_registration]["challenge"], user_verification: false )
 
       partner.credentials.build(
         webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id),

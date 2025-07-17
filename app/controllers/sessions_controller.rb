@@ -7,7 +7,6 @@ class SessionsController < ApplicationController
 
   def create
     partner = Partner.find(params[:partner_id])
-
     allow_credentials = partner.credentials.map do |cred|
       {
         type: "public-key",
@@ -19,8 +18,7 @@ class SessionsController < ApplicationController
     get_options = WebAuthn::Credential.options_for_get(
       allow: allow_credentials,
       user_verification: "discouraged",
-      timeout: 60_000,
-      challenge: WebAuthn.generate_challenge
+      timeout: 60_000
     )
 
     session[:current_authentication] = {
