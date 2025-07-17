@@ -15,7 +15,7 @@ gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
 
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[ mingw  jruby ]
 
 gem "solid_cache"
 gem "solid_queue"
@@ -28,7 +28,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", platforms: %i[ mri mingw ], require: "debug/prelude"
 
   gem "brakeman", require: false
 

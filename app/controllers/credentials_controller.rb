@@ -6,14 +6,31 @@ class CredentialsController < ApplicationController
   def index;end
 
   def create
+    challenge = WebAuthn.generate_challenge
+
     create_options = WebAuthn::Credential.options_for_create(
-      user: {
-        id: current_user.webauthn_id,
-        name: current_user.username
-      },
-      exclude: current_user.credentials.pluck(:webauthn_id),
-      authenticator_selection: { user_verification: "required" }
-    )
+    user: {
+      id: current_user.webauthn_id,           # valor binário (ex: 16 bytes random)
+      name: current_user.email,                # ex: "usuario@localhost"
+      display_name: current_user.name          # ex: "Usuário Local"
+    },
+    rp: {
+      name: "Meu App Local",
+      id: request.host                         # domínio atual (ex: localhost)
+    },
+    pub_key_cred_params: [
+      { type: "public-key", alg: -7 },        # ES256
+      { type: "public-key", alg: -257 }       # RS256
+    ],
+    authenticator_selection: {
+      authenticator_attachment: "cross-platform",
+      user_verification: "discouraged",
+      resident_key: "discouraged"
+    },
+    timeout: 60000,
+    attestation: "none",
+    challenge: challenge
+  )
 
     session[:current_registration] = { challenge: create_options.challenge }
 

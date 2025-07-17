@@ -8,13 +8,24 @@ class SessionsController < ApplicationController
   def create
     partner = Partner.find(params[:partner_id])
 
+    allow_credentials = partner.credentials.map do |cred|
+      {
+        type: "public-key",
+        id: Base64.urlsafe_encode64(cred.webauthn_id, padding: false),
+        transports: ["usb", "nfc", "ble"] # ou ajuste conforme necessário
+      }
+    end
+
     get_options = WebAuthn::Credential.options_for_get(
-      allow: partner.credentials.pluck(:webauthn_id),
-      user_verification: "required"
+      allow: allow_credentials,
+      user_verification: "discouraged",
+      timeout: 60_000,
+      challenge: WebAuthn.generate_challenge
     )
 
     session[:current_authentication] = {
-      challenge: get_options.challenge, id: partner.id
+      challenge: get_options.challenge,
+      partner_id: partner.id
     }
 
     respond_to do |format|
@@ -23,11 +34,12 @@ class SessionsController < ApplicationController
   end
 
   def callback
-    webauthn_credential = WebAuthn::Credential.from_get(params)
+    webauthn_credential = WebAuthn::Credential.from_get(params[:credential])
 
-    partner = Partner.find(session[:current_authentication]["id"])
+    partner = Partner.find(session[:current_authentication]["partner_id"])
+
     credential = partner.credentials.find_by(
-      webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id)
+      webauthn_id: Base64.urlsafe_decode64(webauthn_credential.id)
     )
 
     begin
@@ -35,18 +47,19 @@ class SessionsController < ApplicationController
         session[:current_authentication]["challenge"],
         public_key: credential.public_key,
         sign_count: credential.sign_count,
-        user_verification: true
+        user_verification: false # precisa bater com o que foi definido na challenge
       )
 
       credential.update!(sign_count: webauthn_credential.sign_count)
+
       sign_in(partner)
 
       render json: {
         redirect_to: new_event_path(partner_id: partner.id)
       }, status: :ok
     rescue WebAuthn::Error => e
-      render json: "Verification failed: #{e.message}",
-        status: :unprocessable_entity
+      render json: { error: "Verification failed: #{e.message}" },
+             status: :unprocessable_entity
     ensure
       session.delete(:current_authentication)
     end
@@ -54,13 +67,6 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-
     redirect_to root_path
-  end
-
-  private
-
-  def session_params
-    params.require(:session).permit(:username)
   end
 end

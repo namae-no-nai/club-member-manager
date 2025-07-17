@@ -11,6 +11,18 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-production:
+production: &production
   <<: *default
   database: storage/production.sqlite3
+
+queue:
+  production:
+    <<: *production
+
+cable:
+  production:
+    <<: *production
+
+cache:
+  <<: *default
+  database: storage/cache.sqlite3
