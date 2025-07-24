@@ -7,17 +7,18 @@ class SessionsController < ApplicationController
 
   def create
     partner = Partner.find(params[:partner_id])
+    
     allow_credentials = partner.credentials.map do |cred|
-      {
-        type: "public-key",
-        id: Base64.urlsafe_encode64(cred.webauthn_id, padding: false),
-        transports: ["usb", "nfc", "ble"] # ou ajuste conforme necessário
-      }
+     {
+      id: Base64.urlsafe_encode64(cred.webauthn_id, padding: false),
+      type: 'public-key',
+      transports: ['usb']
+    }
     end
 
     get_options = WebAuthn::Credential.options_for_get(
-      allow: allow_credentials,
-      user_verification: "discouraged",
+      allow_credentials:,
+      user_verification: "preferred",
       timeout: 60_000
     )
 
@@ -27,7 +28,7 @@ class SessionsController < ApplicationController
     }
 
     respond_to do |format|
-      format.json { render json: get_options }
+      format.json { render json: { publicKey: get_options } } 
     end
   end
 
@@ -45,7 +46,7 @@ class SessionsController < ApplicationController
         session[:current_authentication]["challenge"],
         public_key: credential.public_key,
         sign_count: credential.sign_count,
-        user_verification: false # precisa bater com o que foi definido na challenge
+        user_verification: false
       )
 
       credential.update!(sign_count: webauthn_credential.sign_count)

@@ -26,8 +26,8 @@ class RegistrationsController < ApplicationController
       exclude: @partner.credentials.pluck(:webauthn_id),
       authenticator_selection: {
         authenticator_attachment: "cross-platform",
-        user_verification: "discouraged",
-        resident_key: "discouraged"
+        user_verification: "preferred",
+        resident_key: "preferred"
       },
       timeout: 60000,
       attestation: "none",
@@ -49,7 +49,7 @@ class RegistrationsController < ApplicationController
       webauthn_credential.verify( session[:current_registration]["challenge"], user_verification: false )
 
       partner.credentials.build(
-        webauthn_id: Base64.strict_encode64(webauthn_credential.raw_id),
+        webauthn_id: webauthn_credential.raw_id,
         nickname: params[:credential_nickname],
         public_key: webauthn_credential.public_key,
         sign_count: webauthn_credential.sign_count

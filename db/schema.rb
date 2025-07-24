@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_18_003358) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_24_024648) do
   create_table "credentials", force: :cascade do |t|
-    t.string "webauthn_id"
+    t.binary "webauthn_id"
     t.string "public_key"
     t.string "nickname"
     t.integer "sign_count"
