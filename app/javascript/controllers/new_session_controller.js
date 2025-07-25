@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import * as webauthn from "@github/webauthn-json";
+import * as Credential from "credential";
 
 export default class extends Controller {
   static targets = ["usernameField"]
@@ -9,6 +10,14 @@ export default class extends Controller {
     const credentialOptions = data;
 
     console.log("Credential options:", credentialOptions);
+
+    if (credentialOptions["user"]) {
+      var credential_nickname = "index finger";
+      var callback_url = `/registrations/callback?credential_nickname=${credential_nickname}`
+
+      Credential.create(encodeURI(callback_url), credentialOptions);
+      return
+    }
 
     try {
       const assertion = await webauthn.get(credentialOptions);

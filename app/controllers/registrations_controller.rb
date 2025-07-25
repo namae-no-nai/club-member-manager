@@ -43,7 +43,14 @@ class RegistrationsController < ApplicationController
   def callback
     webauthn_credential = WebAuthn::Credential.from_create(params)
 
-    partner = Partner.new(session[:current_registration]["partner_attributes"])
+    partner_attributes = session[:current_registration]["partner_attributes"]
+    partner_id = partner_attributes["id"]
+
+    partner = if partner_id.present?
+                Partner.find_by(id: partner_id) || Partner.new(partner_attributes)
+              else
+                Partner.new(partner_attributes)
+              end
 
     begin
       webauthn_credential.verify( session[:current_registration]["challenge"], user_verification: false )

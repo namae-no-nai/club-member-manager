@@ -6,14 +6,47 @@ class SessionsController < ApplicationController
   end
 
   def create
-    partner = Partner.find(params[:partner_id])
+    @partner = Partner.find(params[:partner_id])
     
-    allow_credentials = partner.credentials.map do |cred|
+    allow_credentials = @partner.credentials.map do |cred|
      {
       id: Base64.urlsafe_encode64(cred.webauthn_id, padding: false),
       type: 'public-key',
       transports: ['usb']
     }
+    end
+
+    if allow_credentials.blank?
+      create_options = WebAuthn::Credential.options_for_create(
+        user: {
+          id: @partner.webauthn_id,           # valor binário (ex: 16 bytes random)
+          name: @partner.cpf,                # ex: "usuario@localhost"
+          display_name: @partner.cpf        # ex: "Usuário Local"
+        },
+        rp: {
+          name: request.host,
+          id: request.host                         # domínio atual (ex: localhost)
+        },
+        pub_key_cred_params: [
+          { type: "public-key", alg: -7 },        # ES256
+          { type: "public-key", alg: -257 }       # RS256
+        ],
+        exclude: @partner.credentials.pluck(:webauthn_id),
+        authenticator_selection: {
+          authenticator_attachment: "cross-platform",
+          user_verification: "preferred",
+          resident_key: "preferred"
+        },
+        timeout: 60000,
+        attestation: "none",
+      )
+
+      session[:current_registration] = { challenge: create_options.challenge, partner_attributes: @partner.attributes }
+
+      respond_to do |format|
+        format.json { render json: create_options }
+      end
+      return
     end
 
     get_options = WebAuthn::Credential.options_for_get(
@@ -24,7 +57,7 @@ class SessionsController < ApplicationController
 
     session[:current_authentication] = {
       challenge: get_options.challenge,
-      partner_id: partner.id
+      partner_id: @partner.id
     }
 
     respond_to do |format|
