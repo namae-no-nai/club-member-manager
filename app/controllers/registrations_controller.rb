@@ -9,31 +9,15 @@ class RegistrationsController < ApplicationController
     @partner = Partner.new(partner_params)
     return render :new unless @partner.valid?
 
-    create_options = WebAuthn::Credential.options_for_create(
-      user: {
-        id: @partner.webauthn_id,           # valor binário (ex: 16 bytes random)
-        name: @partner.cpf,                # ex: "usuario@localhost"
-        display_name: @partner.cpf        # ex: "Usuário Local"
-      },
-      rp: {
-        name: request.host,
-        id: request.host                         # domínio atual (ex: localhost)
-      },
-      pub_key_cred_params: [
-        { type: "public-key", alg: -7 },        # ES256
-        { type: "public-key", alg: -257 }       # RS256
-      ],
-      exclude: @partner.credentials.pluck(:webauthn_id),
-      authenticator_selection: {
-        authenticator_attachment: "cross-platform",
-        user_verification: "preferred",
-        resident_key: "preferred"
-      },
-      timeout: 60000,
-      attestation: "none",
-    )
-
-    session[:current_registration] = { challenge: create_options.challenge, partner_attributes: @partner.attributes }
+    create_options = WebAuthn::CredentialCreationService.new(
+      partner: @partner,
+      request: request
+    ).call
+    
+    session[:current_registration] = {
+      challenge: create_options.challenge,
+      partner_attributes: @partner.attributes
+    }
 
     respond_to do |format|
       format.json { render json: create_options }
