@@ -22,9 +22,9 @@ class EventsController < ApplicationController
   end
 
   def new
+    @weapons = (@partners&.first&.weapons&.active || []) + (Partner.club&.weapons&.active || [])
     @partners ||= Partner.all
     @event = Event.new
-    @weapons = (@partner&.weapons&.active || []) + (Partner.club&.weapons&.active || [])
     @old_practice = params[:old_practice] == "true"
     return_to_params = { old_practice: @old_practice }
     return_to_params[:partner_id] = @partners.first.id unless @old_practice
@@ -85,7 +85,7 @@ class EventsController < ApplicationController
   end
 
   def practices_params
-    params.permit(
+    params.permit(:authenticity_token, :commit,
       practices: [ :date, :weapon_id, :activity, :ammo_amount ]
     )[:practices]
   end
