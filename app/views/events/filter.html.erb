@@ -9,7 +9,7 @@
         class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4") do |f| %>
       <div>
         <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.number_field :registry_certificate, required: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Insira o certificado de registro" %>
+        <%= f.text_field :registry_certificate, required: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Insira o certificado de registro" %>
       </div>
       <% if flash[:alert] %>
         <div class="alert alert-danger">
