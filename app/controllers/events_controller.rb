@@ -13,8 +13,17 @@ class EventsController < ApplicationController
       redirect_to(filter_events_path, alert: "Praticante não encontrado")
       return
     end
-    start_date = params[:start_date].to_date
-    end_date = params[:end_date].to_date
+    start_date = Date.new(
+      params["start_date(1i)"].to_i,
+      params["start_date(2i)"].to_i,
+      params["start_date(3i)"].to_i
+    )
+
+    end_date = Date.new(
+      params["end_date(1i)"].to_i,
+      params["end_date(2i)"].to_i,
+      params["end_date(3i)"].to_i
+    )
     @events = Event.includes(:weapon)
                    .where(partner_id: @partner.id)
                    .where(date: start_date.beginning_of_day..end_date.end_of_day)
