@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "events#index"
-  resources :events, only: %i[ index new edit update create ] do
+  resources :events, only: %i[ index new edit update create destroy] do
     collection do
       get "register/:partner_id", to: "events#register", as: "register"
       get :filter

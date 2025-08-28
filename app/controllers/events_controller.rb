@@ -13,8 +13,17 @@ class EventsController < ApplicationController
       redirect_to(filter_events_path, alert: "Praticante não encontrado")
       return
     end
-  start_date = params[:start_date]
-  end_date = params[:end_date]
+    start_date = Date.new(
+      params["[start_date(1i)]"].to_i,
+      params["[start_date(2i)]"].to_i,
+      params["[start_date(3i)]"].to_i
+    )
+
+    end_date = Date.new(
+      params["[end_date(1i)]"].to_i,
+      params["[end_date(2i)]"].to_i,
+      params["[end_date(3i)]"].to_i
+    )
   @events = Event.includes(:weapon)
     .where(partner_id: @partner.id, date: start_date..end_date)
     .order(date: :asc)
@@ -71,6 +80,16 @@ class EventsController < ApplicationController
     end
   end
 
+
+  def destroy
+    @event = Event.find(params[:id])
+    @event.destroy
+    respond_to do |format|
+      format.html { redirect_to last_records_path, notice: "Evento deletado com sucesso." }
+      format.json { head :no_content }
+    end
+  end
+
   private
 
   def find_partners
@@ -99,6 +118,6 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:partner_id)
+    params.require(:event).permit(:partner_id, :start_date, :end_date)
   end
 end
