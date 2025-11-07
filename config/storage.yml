@@ -14,6 +14,16 @@ local:
 #   region: us-east-1
 #   bucket: your_own_bucket-<%= Rails.env %>
 
+# MinIO S3-compatible storage (for development/production)
+minio:
+  service: S3
+  access_key_id: <%= ENV.fetch("MINIO_ROOT_USER", "minioadmin") %>
+  secret_access_key: <%= ENV.fetch("MINIO_ROOT_PASSWORD", "minioadmin") %>
+  region: us-east-1
+  bucket: club-member-manager-<%= Rails.env %>
+  endpoint: <%= ENV.fetch("MINIO_ENDPOINT", "http://minio:9000") %>
+  force_path_style: true
+
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS

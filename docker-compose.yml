@@ -1,16 +1,53 @@
 services:
-  web:
-    build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
-    volumes:
-      - ".:/rails"
-      - sqlite_data:/rails/storage
+  # web:
+  #   build: .
+  #   command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+  #   volumes:
+  #     - ".:/rails"
+  #     - sqlite_data:/rails/storage
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     RAILS_ENV: production
+  #     RAILS_MASTER_KEY: "db12bed2a5bf4405c086a1fc80885366"
+  #   depends_on:
+  #     - minio
+
+  # Option 1: MinIO (Open Source) - Production ready, S3-compatible
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
     ports:
-      - "3000:3000"
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # Web Console
     environment:
-      RAILS_ENV: production
-      RAILS_MASTER_KEY: "db12bed2a5bf4405c086a1fc80885366"
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Option 2: LocalStack (Development only - simpler but not for production)
+  # Uncomment this and comment out minio above if you prefer LocalStack
+  # localstack:
+  #   image: localstack/localstack:latest
+  #   ports:
+  #     - "4566:4566"  # LocalStack services
+  #   environment:
+  #     SERVICES: s3
+  #     DEBUG: 1
+  #     DATA_DIR: /tmp/localstack/data
+  #   volumes:
+  #     - localstack_data:/tmp/localstack
 
 volumes:
   sqlite_data:
     driver: local
+  minio_data:
+    driver: local
+  # localstack_data:  # Uncomment if using LocalStack
+  #   driver: local
