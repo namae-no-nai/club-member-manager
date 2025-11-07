@@ -13,10 +13,10 @@ gem "cpf_cnpj"
 gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
-gem "aws-sdk-s3", require: false
+gem "aws-sdk-s3"
 
 
-gem "tzinfo-data", platforms: %i[ mingw  jruby ]
+gem "tzinfo-data", platforms: %i[ mingw jruby ]
 
 gem "solid_cache"
 gem "solid_queue"
