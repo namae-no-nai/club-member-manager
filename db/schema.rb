@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_24_024648) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_04_202953) do
   create_table "credentials", force: :cascade do |t|
     t.binary "webauthn_id"
     t.string "public_key"
@@ -31,6 +31,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_24_024648) do
     t.integer "sheet", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "register_number"
+    t.index ["weapon_id", "register_number"], name: "index_events_on_weapon_id_and_register_number", unique: true
   end
 
   create_table "finger_prints", force: :cascade do |t|
