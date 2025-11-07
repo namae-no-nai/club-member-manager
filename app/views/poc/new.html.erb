@@ -1,0 +1,174 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Registrar Praticante (POC)</h1>
+    </div>
+
+    <%= form_with(model: @partner, url: poc_index_path, method: :post, local: false, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <% if @partner.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <strong class="font-bold"><%= pluralize(@partner.errors.count, "error") %> prevented this event from being saved:</strong>
+          <ul class="mt-2">
+            <% @partner.errors.full_messages.each do |message| %>
+              <li class="text-sm"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <%= form.label :full_name, 'Nome completo', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :full_name, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :cpf, 'CPF', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :cpf, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate, 'CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :registry_certificate, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+
+        <div>
+          <%= form.label :registry_certificate_expiration_date, 'Data de expiração CR', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :registry_certificate_expiration_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+        <div>
+          <%= form.label :address, 'Endereço', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :address, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+        <div>
+          <%= form.label :filiation_number, 'Número de filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :filiation_number, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
+        </div>
+        <div>
+          <%= form.label :first_filiation_date, 'Data da primeira filiação', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        </div>
+
+        <!-- Camera Capture Section -->
+        <div class="mt-4 border-t pt-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4">Captura de Foto</h2>
+
+          <div class="camera-section mb-4">
+            <div class="flex gap-4">
+              <div class="camera flex-1">
+                <video id="video" class="w-full border border-gray-300 rounded-md" style="display: none;">Video stream not available.</video>
+                <button type="button" id="start-button" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition" style="display: none;">Capturar Foto</button>
+                <button type="button" id="allow-button" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition">Permitir Câmera</button>
+              </div>
+
+              <div class="output flex-1">
+                <img id="photo" src="" alt="A captura aparecerá aqui." class="w-full border border-gray-300 rounded-md" style="display: none;" />
+                <canvas id="canvas" style="display: none;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <%= form.hidden_field :biometric_proof, id: "biometric_proof" %>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Registrar Praticante", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Voltar', new_session_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const width = 720;
+    let height = 0;
+    let streaming = false;
+    let videoStream = null;
+
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const photo = document.getElementById("photo");
+    const startButton = document.getElementById("start-button");
+    const allowButton = document.getElementById("allow-button");
+    const biometricProofInput = document.getElementById("biometric_proof");
+
+    // Get the media stream
+    allowButton.addEventListener("click", () => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          videoStream = stream;
+          video.srcObject = stream;
+          video.play();
+          allowButton.style.display = "none";
+          video.style.display = "block";
+          startButton.style.display = "block";
+        })
+        .catch((err) => {
+          console.error(`An error occurred: ${err}`);
+          alert("Erro ao acessar a câmera: " + err.message);
+        });
+    });
+
+    // Listen for the video to start playing
+    video.addEventListener("canplay", (ev) => {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
+
+        video.setAttribute("width", width);
+        video.setAttribute("height", height);
+        canvas.setAttribute("width", width);
+        canvas.setAttribute("height", height);
+        streaming = true;
+      }
+    });
+
+    // Handle clicks on the capture button
+    startButton.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      takePicture();
+    });
+
+    // Clear the photo box
+    function clearPhoto() {
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#aaaaaa";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const data = canvas.toDataURL("image/png");
+      photo.setAttribute("src", data);
+    }
+
+    // Capturing a frame from the stream
+    function takePicture() {
+      const context = canvas.getContext("2d");
+      if (width && height) {
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(video, 0, 0, width, height);
+
+        const data = canvas.toDataURL("image/png");
+        photo.setAttribute("src", data);
+        photo.style.display = "block";
+        
+        // Store base64 data in hidden input
+        biometricProofInput.value = data;
+      } else {
+        clearPhoto();
+      }
+    }
+
+    // Initialize with empty photo
+    clearPhoto();
+
+    // Clean up stream when form is submitted or page is unloaded
+    window.addEventListener("beforeunload", () => {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+    });
+  })();
+</script>
+

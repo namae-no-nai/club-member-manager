@@ -27,6 +27,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :poc, only: %i[ new create ]
+
   resources :credentials, only: %i[ index new create destroy] do
     collection do
       post :callback
