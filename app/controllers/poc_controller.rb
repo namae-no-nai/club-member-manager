@@ -6,9 +6,12 @@ class PocController < ApplicationController
   end
 
   def create
-    @partner = Partner.new(partner_params)
+    s3_object = BucketUploaderService.new(image_data: biometric_proof_params).call
 
-    if @partner.valid?
+    @partner = Partner.new(partner_params)
+    @partner.biometric_proof = s3_object.key
+
+    if @partner.save
       # For now, just render success - no persistence
       render json: { status: "success", message: "Form submitted successfully" }, status: :ok
     else
@@ -23,7 +26,10 @@ class PocController < ApplicationController
       :full_name, :cpf, :registry_certificate,
       :registry_certificate_expiration_date, :address,
       :filiation_number, :first_filiation_date,
-      :biometric_proof
     )
+  end
+
+  def biometric_proof_params
+    params.require(:partner).require(:biometric_proof)
   end
 end
