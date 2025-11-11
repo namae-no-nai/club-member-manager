@@ -16,36 +16,43 @@ class PocController < ApplicationController
     @partner.biometric_proof = s3_object.key
 
     if @partner.save
-      # For now, just render success - no persistence
-      render json: { status: "success", message: "Form submitted successfully" }, status: :ok
+      redirect_to edit_partner_path(@partner)
     else
-      render json: { status: "error", errors: @partner.errors.full_messages }, status: :unprocessable_entity
+      flash[:alert] = "Erro ao registrar praticante: #{@partner.errors.full_messages.join(', ')}"
+      redirect_to new_poc_path
     end
+
+  rescue => e
+    Rails.logger.error("PocController#create error: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+    flash[:alert] = "Erro ao tentar registrar praticante: #{e.message}"
+    redirect_to new_poc_path
   end
 
   def verify
     @partner = Partner.find(params[:partner_id])
     @current_biometric_proof = params[:biometric_proof]
 
-    # Perform verification if both images are available
-    if @current_biometric_proof.present? && @partner.biometric_proof.present?
-      begin
-        @verification_result = BiometricVerificationService.new(
-          current_image_data: @current_biometric_proof,
-          stored_image_key: @partner.biometric_proof
-        ).call
+    redirect_to index_poc_path unless @current_biometric_proof.present? && \
+                                      @partner.biometric_proof.present?
 
-        # Check if verification result has an error
-        if @verification_result[:error].present?
-          flash[:alert] = "Erro na verificação biométrica: #{@verification_result[:error]}"
-        end
-      rescue => e
-        Rails.logger.error("PocController#show error: #{e.class}: #{e.message}")
-        Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
-        flash[:alert] = "Erro ao processar verificação biométrica: #{e.message}"
-        @verification_result = { verified: false, error: e.message }
-      end
+    @verification_result = BiometricVerificationService.new(
+      current_image_data: @current_biometric_proof,
+      stored_image_key: @partner.biometric_proof
+    ).call
+
+    # Check if verification result has an error
+    if @verification_result[:error].present?
+      flash[:alert] = "Erro na verificação biométrica: #{@verification_result[:error]}"
+      redirect_to index_poc_path
     end
+
+    redirect_to edit_partner_path(@partner)
+  rescue => e
+    Rails.logger.error("PocController#show error: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+    flash[:alert] = "Erro ao processar verificação biométrica: #{e.message}"
+    @verification_result = { verified: false, error: e.message }
   end
 
   private

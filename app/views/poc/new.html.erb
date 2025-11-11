@@ -4,10 +4,10 @@
       <h1 class="text-3xl font-bold text-red-600">Registrar Praticante (POC)</h1>
     </div>
 
-    <%= form_with(model: @partner, url: poc_index_path, method: :post, local: false, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+    <%= form_with(model: @partner, url: poc_index_path, method: :post, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
       <% if @partner.errors.any? %>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-          <strong class="font-bold"><%= pluralize(@partner.errors.count, "error") %> prevented this event from being saved:</strong>
+          <strong class="font-bold"><%= pluralize(@partner.errors.count, "error") %> prevented this partner from being saved:</strong>
           <ul class="mt-2">
             <% @partner.errors.full_messages.each do |message| %>
               <li class="text-sm"><%= message %></li>
@@ -74,7 +74,7 @@
 
       <div class="mt-6 flex justify-between">
         <%= form.submit "Registrar Praticante", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
-        <%= link_to 'Voltar', new_session_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
       </div>
     <% end %>
   </div>

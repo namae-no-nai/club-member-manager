@@ -5,7 +5,7 @@ require "uri"
 require "json"
 
 class BiometricVerificationService
-  API_BASE_URL = "http://localhost:7000"
+  def api_base_url = Rails.application.config.face_comparison_url
 
   def initialize(current_image_data:, stored_image_key:)
     @current_image_data = current_image_data # base64 string
@@ -40,7 +40,7 @@ class BiometricVerificationService
   end
 
   def compare_faces(image1_base64, image2_base64)
-    uri = URI("#{API_BASE_URL}/compare-faces")
+    uri = URI("#{api_base_url}/compare-faces")
 
     # Decode base64 to binary data
     image1_data = Base64.decode64(image1_base64)
@@ -68,22 +68,6 @@ class BiometricVerificationService
         [ "image2", image2_file, { filename: "image2.png", content_type: "image/png" } ]
       ]
       request.set_form(form_data, "multipart/form-data")
-
-      # Option 2: Base64 strings in JSON body (COMMENTED)
-      # request = Net::HTTP::Post.new(uri)
-      # request["Content-Type"] = "application/json"
-      # request.body = {
-      #   image1: image1_base64,
-      #   image2: image2_base64
-      # }.to_json
-
-      # Option 3: Base64 strings with data URI prefix (COMMENTED)
-      # request = Net::HTTP::Post.new(uri)
-      # form_data = [
-      #   [ "image1", "data:image/png;base64,#{image1_base64}" ],
-      #   [ "image2", "data:image/png;base64,#{image2_base64}" ]
-      # ]
-      # request.set_form(form_data, "multipart/form-data")
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.read_timeout = 30 # 30 seconds timeout
