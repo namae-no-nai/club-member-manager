@@ -3,6 +3,20 @@
     <div class="text-center mb-6">
       <h1 class="text-3xl font-bold text-red-600">Verificação (POC)</h1>
     </div>
+
+    <% if flash[:alert] %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Erro:</strong>
+        <span class="block sm:inline"><%= flash[:alert] %></span>
+      </div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        <strong class="font-bold">Sucesso:</strong>
+        <span class="block sm:inline"><%= flash[:notice] %></span>
+      </div>
+    <% end %>
     
     <div class="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
       <% if @partner %>
@@ -11,8 +25,22 @@
           <p class="text-lg text-gray-900"><%= @partner.friendly_name %></p>
         </div>
       <% end %>
-      
-      <p class="text-center text-gray-600">Esta página será implementada posteriormente.</p>
+
+      <% if @verification_result %>
+        <div class="mt-4">
+          <p class="text-sm font-medium text-gray-700">Resultado da Verificação:</p>
+          <% if @verification_result[:verified] %>
+            <p class="text-lg text-green-600 font-bold">✓ Verificado</p>
+          <% else %>
+            <p class="text-lg text-red-600 font-bold">✗ Não Verificado</p>
+            <% if @verification_result[:error] %>
+              <p class="text-sm text-gray-600 mt-2"><%= @verification_result[:error] %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-center text-gray-600">Nenhuma verificação foi realizada.</p>
+      <% end %>
     </div>
   </div>
 </div>
