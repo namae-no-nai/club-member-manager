@@ -27,7 +27,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :poc, only: %i[ new create ]
+  resources :poc, only: %i[ new create show index] do
+    collection do
+      post :verify
+    end
+  end
 
   resources :credentials, only: %i[ index new create destroy] do
     collection do

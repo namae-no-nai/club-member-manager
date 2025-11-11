@@ -1,11 +1,22 @@
 # frozen_string_literal: true
 
 class PocController < ApplicationController
+  def index
+  end
+
   def new
     @partner = Partner.new
   end
 
   def create
+    # Handle form from index (with partner_id dropdown)
+    if params[:partner_id].present?
+      session[:biometric_proof] = params[:biometric_proof] if params[:biometric_proof].present?
+      redirect_to poc_path(params[:partner_id])
+      return
+    end
+
+    # Handle form from new (creating new partner)
     s3_object = BucketUploaderService.new(image_data: biometric_proof_params).call
 
     @partner = Partner.new(partner_params)
@@ -17,6 +28,13 @@ class PocController < ApplicationController
     else
       render json: { status: "error", errors: @partner.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def show
+    @partner = Partner.find(params[:id])
+    @biometric_proof = session[:biometric_proof]
+    # Clear the session after using it
+    session.delete(:biometric_proof) if @biometric_proof.present?
   end
 
   private

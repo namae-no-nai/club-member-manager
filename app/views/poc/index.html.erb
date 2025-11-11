@@ -1,0 +1,144 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Verificar Praticante</h1>
+    </div>
+
+    <%= form_with(url: verify_poc_index_path, method: :post, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <%= form.label :partner_id, 'Praticante', class: "block text-sm font-medium text-gray-700" %>
+          <%= form.collection_select :partner_id, Partner.all, :id, :friendly_name, { prompt: "Selecione um praticante" }, { class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" } %>
+        </div>
+
+        <!-- Camera Capture Section -->
+        <div class="mt-4 border-t pt-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4">Captura de Foto</h2>
+
+          <div class="camera-section mb-4">
+            <div class="flex gap-4">
+              <div class="camera flex-1">
+                <video id="video" class="w-full border border-gray-300 rounded-md" style="display: none;">Video stream not available.</video>
+                <button type="button" id="start-button" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition" style="display: none;">Capturar Foto</button>
+                <button type="button" id="allow-button" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition">Permitir Câmera</button>
+              </div>
+
+              <div class="output flex-1">
+                <img id="photo" src="" alt="A captura aparecerá aqui." class="w-full border border-gray-300 rounded-md" style="display: none;" />
+                <canvas id="canvas" style="display: none;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <%= form.hidden_field :biometric_proof, id: "biometric_proof" %>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Enviar", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const width = 720;
+    let height = 0;
+    let streaming = false;
+    let videoStream = null;
+
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const photo = document.getElementById("photo");
+    const startButton = document.getElementById("start-button");
+    const allowButton = document.getElementById("allow-button");
+    const biometricProofInput = document.getElementById("biometric_proof");
+
+    // Get the media stream
+    allowButton.addEventListener("click", () => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          videoStream = stream;
+          video.srcObject = stream;
+          video.play();
+          allowButton.style.display = "none";
+          video.style.display = "block";
+          startButton.style.display = "block";
+        })
+        .catch((err) => {
+          console.error(`An error occurred: ${err}`);
+          alert("Erro ao acessar a câmera: " + err.message);
+        });
+    });
+
+    // Listen for the video to start playing
+    video.addEventListener("canplay", (ev) => {
+      if (!streaming) {
+        height = video.videoHeight / (video.videoWidth / width);
+
+        video.setAttribute("width", width);
+        video.setAttribute("height", height);
+        canvas.setAttribute("width", width);
+        canvas.setAttribute("height", height);
+        streaming = true;
+      }
+    });
+
+    // Handle clicks on the capture button
+    startButton.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      takePicture();
+    });
+
+    // Clear the photo box
+    function clearPhoto() {
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#aaaaaa";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const data = canvas.toDataURL("image/png");
+      photo.setAttribute("src", data);
+    }
+
+    // Capturing a frame from the stream
+    function takePicture() {
+      const context = canvas.getContext("2d");
+      if (width && height) {
+        canvas.width = width;
+        canvas.height = height;
+        context.drawImage(video, 0, 0, width, height);
+
+        const data = canvas.toDataURL("image/png");
+        photo.setAttribute("src", data);
+        photo.style.display = "block";
+        
+        // Store base64 data in hidden input
+        biometricProofInput.value = data;
+      } else {
+        clearPhoto();
+      }
+    }
+
+    // Initialize with empty photo
+    clearPhoto();
+
+    // Clean up stream when form is submitted or page is unloaded
+    window.addEventListener("beforeunload", () => {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+    });
+
+    // Clean up stream when form is submitted
+    const form = document.querySelector('form');
+    form.addEventListener("submit", () => {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
+    });
+  })();
+</script>
+
