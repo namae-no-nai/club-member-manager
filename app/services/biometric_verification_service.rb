@@ -7,9 +7,10 @@ require "json"
 class BiometricVerificationService
   def api_base_url = Rails.application.config.face_comparison_url
 
-  def initialize(current_image_data:, stored_image_key:)
+  def initialize(current_image_data:, stored_image_key:, active_storage_image:)
     @current_image_data = current_image_data # base64 string
     @stored_image_key = stored_image_key # S3 key
+    @active_storage_image = active_storage_image # ActiveStorage::Attached::One
   end
 
   def call
@@ -17,7 +18,7 @@ class BiometricVerificationService
     current_image_base64 = extract_base64_string(@current_image_data)
 
     # Download stored image from S3 and convert to base64
-    stored_image_base64 = download_stored_image_as_base64(@stored_image_key)
+    stored_image_base64 = download_stored_image_as_base64
 
     # Compare images using microservice API
     compare_faces(current_image_base64, stored_image_base64)
@@ -34,8 +35,12 @@ class BiometricVerificationService
     base64_data.include?(",") ? base64_data.split(",")[1] : base64_data
   end
 
-  def download_stored_image_as_base64(s3_key)
-    image_content = BucketClientService.new.read_file_content(file_name: s3_key)
+  def download_stored_image_as_base64
+    if @active_storage_image&.attached?
+      return Base64.encode64(@active_storage_image.download).strip
+    end
+
+    image_content = BucketClientService.new.read_file_content(file_name: @stored_image_key)
     Base64.encode64(image_content).strip
   end
 
@@ -86,7 +91,7 @@ class BiometricVerificationService
       error_message = "Failed to parse API response: #{e.message}"
       Rails.logger.error("Biometric verification parse error: #{error_message}")
       { verified: false, error: error_message }
-    rescue Net::TimeoutError, Errno::ECONNREFUSED, SocketError => e
+    rescue Net::ReadTimeout, Net::OpenTimeout, Errno::ECONNREFUSED, SocketError => e
       error_message = "Failed to connect to biometric service: #{e.message}"
       Rails.logger.error("Biometric verification connection error: #{error_message}")
       { verified: false, error: error_message }

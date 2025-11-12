@@ -33,18 +33,21 @@ class PocController < ApplicationController
     @partner = Partner.find(params[:partner_id])
     @current_biometric_proof = params[:biometric_proof]
 
-    redirect_to index_poc_path unless @current_biometric_proof.present? && \
-                                      @partner.biometric_proof.present?
+    redirect_to poc_index_path unless @current_biometric_proof.present? && \
+                                      (@partner.biometric_proof.present? || @partner.biometric_proof_image.attached?)
 
     @verification_result = BiometricVerificationService.new(
       current_image_data: @current_biometric_proof,
-      stored_image_key: @partner.biometric_proof
+      stored_image_key: @partner.biometric_proof,
+      active_storage_image: @partner.biometric_proof_image
     ).call
+
+    debugger
 
     # Check if verification result has an error
     if @verification_result[:error].present?
       flash[:alert] = "Erro na verificação biométrica: #{@verification_result[:error]}"
-      redirect_to index_poc_path
+      redirect_to poc_index_path
     end
 
     redirect_to edit_partner_path(@partner)
