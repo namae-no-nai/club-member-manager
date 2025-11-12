@@ -1,4 +1,11 @@
 <div class="flex justify-center items-center min-h-screen">
+  <% if flash[:alert] %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+      <strong class="font-bold">Erro:</strong>
+      <span class="block sm:inline"><%= flash[:alert] %></span>
+    </div>
+  <% end %>
+
   <div class="w-full max-w-2xl">
     <div class="text-center mb-6">
       <h1 class="text-3xl font-bold text-red-600">Registrar Praticante (POC)</h1>
