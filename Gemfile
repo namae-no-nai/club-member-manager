@@ -14,6 +14,7 @@ gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 gem "aws-sdk-s3"
+gem "lockbox"
 
 
 gem "tzinfo-data", platforms: %i[ mingw jruby ]

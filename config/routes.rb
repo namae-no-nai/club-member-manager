@@ -52,6 +52,10 @@ Rails.application.routes.draw do
       post :create
       post :webauthn_create_callback
     end
+
+    member do
+      get :biometric_proof_image
+    end
   end
 
   get "/csv/generate", to: "csv#document"

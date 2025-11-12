@@ -5,7 +5,7 @@ class ActiveStorageUploaderService
   end
 
   def call
-    return if biometric_proof_params.blank?
+    return if @image_data.blank?
 
     base64_data = @image_data
     base64_content = base64_data.split(",")[1]  # Remove "data:image/png;base64," prefix
