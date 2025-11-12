@@ -4,6 +4,7 @@ class Partner < ApplicationRecord
   has_many :events
   has_many :credentials
   has_many :weapons
+  has_one_attached :biometric_proof_image
 
   def self.club
     find_by(registry_certificate: 66098)

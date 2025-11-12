@@ -1,5 +1,6 @@
 class BucketUploaderService
-  def initialize(image_data:)
+  def initialize(partner:, image_data:)
+    @partner = partner
     @image_data = image_data
     validate!
   end
@@ -14,10 +15,12 @@ class BucketUploaderService
     # TODO: pick a better naming convention
     file_name = "biometric_proofs/#{SecureRandom.uuid}.#{extension}"
 
-    BucketClientService.new.upload_file(
+    s3_object = BucketClientService.new.upload_file(
       file_name: file_name,
       file_content: image_data
     )
+
+    @partner.biometric_proof = s3_object.key
   end
 
   def validate!

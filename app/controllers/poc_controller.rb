@@ -8,12 +8,12 @@ class PocController < ApplicationController
     @partner = Partner.new
   end
 
+  # backup of S3 style upload
   def create
     # Handle form from new (creating new partner)
-    s3_object = BucketUploaderService.new(image_data: biometric_proof_params).call
-
     @partner = Partner.new(partner_params)
-    @partner.biometric_proof = s3_object.key
+    # BucketUploaderService.new(partner: @partner, image_data: biometric_proof_params).call
+    ActiveStorageUploaderService.new(partner: @partner, image_data: biometric_proof_params).call
 
     if @partner.save
       redirect_to edit_partner_path(@partner)
@@ -61,7 +61,7 @@ class PocController < ApplicationController
     params.require(:partner).permit(
       :full_name, :cpf, :registry_certificate,
       :registry_certificate_expiration_date, :address,
-      :filiation_number, :first_filiation_date,
+      :filiation_number, :first_filiation_date
     )
   end
 
