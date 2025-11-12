@@ -31,18 +31,10 @@ services:
       timeout: 20s
       retries: 3
 
-  # Option 2: LocalStack (Development only - simpler but not for production)
-  # Uncomment this and comment out minio above if you prefer LocalStack
-  # localstack:
-  #   image: localstack/localstack:latest
-  #   ports:
-  #     - "4566:4566"  # LocalStack services
-  #   environment:
-  #     SERVICES: s3
-  #     DEBUG: 1
-  #     DATA_DIR: /tmp/localstack/data
-  #   volumes:
-  #     - localstack_data:/tmp/localstack
+  face-comparison-api:
+    image: gscarv13/face-comparison-api:1.0
+    ports:
+      - "7000:8000"
 
 volumes:
   sqlite_data:
