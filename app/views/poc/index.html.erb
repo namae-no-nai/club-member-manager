@@ -1,0 +1,47 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Verificar Sócio</h1>
+    </div>
+
+    <%= form_with(url: verify_poc_index_path, method: :post, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <%= form.label :partner_id, 'Sócio', class: "block text-sm font-medium text-gray-700" %>
+          
+          <div data-controller="searchable-select">
+            <%= form.collection_select :partner_id, Partner.all, :id, :friendly_name, { prompt: "selecione" }, { data: { searchable_select_target: "select" } } %>
+          </div>
+        </div>
+
+        <!-- Camera Capture Section -->
+        <div class="mt-4 border-t pt-4" data-controller="camera">
+          <h2 class="text-lg font-semibold text-gray-700 mb-4">Captura de Foto</h2>
+
+          <div class="camera-section mb-4">
+            <div class="flex gap-4">
+              <div class="camera flex-1">
+                <video data-camera-target="video" data-action="canplay->camera#videoCanPlay" class="w-full border border-gray-300 rounded-md" style="display: none;">Video stream not available.</video>
+                <button type="button" data-camera-target="startButton" data-action="click->camera#capture" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition" style="display: none;">Capturar Foto</button>
+                <button type="button" data-camera-target="allowButton" data-action="click->camera#requestCamera" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition">Permitir Câmera</button>
+              </div>
+
+              <div class="output flex-1">
+                <img data-camera-target="photo" src="" alt="A captura aparecerá aqui." class="w-full border border-gray-300 rounded-md" style="display: none;" />
+                <canvas data-camera-target="canvas" style="display: none;"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <%= form.hidden_field :biometric_proof, data: { camera_target: "input" } %>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-between">
+        <%= form.submit "Enviar", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+        <%= link_to 'Voltar', root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

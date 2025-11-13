@@ -27,6 +27,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :poc, only: %i[ new create show index] do
+    collection do
+      post :verify
+    end
+  end
+
   resources :credentials, only: %i[ index new create destroy] do
     collection do
       post :callback
@@ -45,6 +51,12 @@ Rails.application.routes.draw do
       post :csv_create
       post :create
       post :webauthn_create_callback
+    end
+
+    member do
+      get "/biometric_proof_images/", to: "biometric_proof_images#show", as: :biometric_proof_image
+      post "/biometric_proof_images/", to: "biometric_proof_images#create", as: :biometric_proof_images
+      delete "/biometric_proof_images/", to: "biometric_proof_images#destroy"
     end
   end
 

@@ -1,0 +1,72 @@
+# frozen_string_literal: true
+
+class PocController < ApplicationController
+  def index
+  end
+
+  def new
+    @partner = Partner.new
+  end
+
+  # backup of S3 style upload
+  def create
+    # Handle form from new (creating new partner)
+    @partner = Partner.new(partner_params)
+    # BucketUploaderService.new(partner: @partner, image_data: biometric_proof_params).call
+    ActiveStorageUploaderService.new(partner: @partner, image_data: biometric_proof_params).call
+
+    if @partner.save
+      redirect_to edit_partner_path(@partner)
+    else
+      flash[:alert] = "Erro ao registrar sócio: #{@partner.errors.full_messages.join(', ')}"
+      redirect_to new_poc_path
+    end
+
+  rescue => e
+    Rails.logger.error("PocController#create error: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+    flash[:alert] = "Erro ao tentar registrar sócio: #{e.message}"
+    redirect_to new_poc_path
+  end
+
+  def verify
+    @partner = Partner.find(params[:partner_id])
+    @current_biometric_proof = params[:biometric_proof]
+
+    redirect_to poc_index_path unless @current_biometric_proof.present? && \
+                                      (@partner.biometric_proof.present? || @partner.biometric_proof_image.attached?)
+
+    @verification_result = BiometricVerificationService.new(
+      current_image_data: @current_biometric_proof,
+      stored_image_key: @partner.biometric_proof,
+      active_storage_image: @partner.biometric_proof_image
+    ).call
+
+    # Check if verification result has an error
+    if @verification_result[:error].present?
+      flash[:alert] = "Erro na verificação biométrica: #{@verification_result[:error]}"
+      redirect_to poc_index_path
+    end
+
+    redirect_to edit_partner_path(@partner)
+  rescue StandardError => e
+    Rails.logger.error("PocController#show error: #{e.class}: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
+    flash[:alert] = "Erro ao processar verificação biométrica: #{e.message}"
+    @verification_result = { verified: false, error: e.message }
+  end
+
+  private
+
+  def partner_params
+    params.require(:partner).permit(
+      :full_name, :cpf, :registry_certificate,
+      :registry_certificate_expiration_date, :address,
+      :filiation_number, :first_filiation_date
+    )
+  end
+
+  def biometric_proof_params
+    params.require(:partner).require(:biometric_proof)
+  end
+end

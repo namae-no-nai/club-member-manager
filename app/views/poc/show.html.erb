@@ -1,0 +1,33 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600">Verificação (POC)</h1>
+    </div>
+    
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+      <% if @partner %>
+        <div class="mb-4">
+          <p class="text-sm font-medium text-gray-700">Sócio:</p>
+          <p class="text-lg text-gray-900"><%= @partner.friendly_name %></p>
+        </div>
+      <% end %>
+
+      <% if @verification_result %>
+        <div class="mt-4">
+          <p class="text-sm font-medium text-gray-700">Resultado da Verificação:</p>
+          <% if @verification_result[:verified] %>
+            <p class="text-lg text-green-600 font-bold">✓ Verificado</p>
+          <% else %>
+            <p class="text-lg text-red-600 font-bold">✗ Não Verificado</p>
+            <% if @verification_result[:error] %>
+              <p class="text-sm text-gray-600 mt-2"><%= @verification_result[:error] %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-center text-gray-600">Nenhuma verificação foi realizada.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+

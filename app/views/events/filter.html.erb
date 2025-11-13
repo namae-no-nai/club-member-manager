@@ -11,11 +11,6 @@
         <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
         <%= f.text_field :registry_certificate, required: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Insira o certificado de registro" %>
       </div>
-      <% if flash[:alert] %>
-        <div class="alert alert-danger">
-          <%= flash[:alert] %>
-        </div>
-    <% end %>
       <div>
         <%= f.label :start_date, "Data inicial", class: "block text-sm font-medium text-gray-700" %>
         <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>

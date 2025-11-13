@@ -51,6 +51,53 @@
           <%= form.label :first_filiation_date, 'Data da primeira filiação', class: "block text-sm font-medium text-gray-700" %>
           <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
         </div>
+
+        <!-- Biometric Proof Image Section -->
+        <div class="mt-4 border-t pt-4" <% unless @partner.biometric_proof_image.attached? %>data-controller="camera" data-camera-show-section-button-value="true"<% end %>>
+          <h3 class="text-lg font-semibold text-gray-700 mb-4">Foto Biométrica</h3>
+
+          <% if @partner.biometric_proof_image.attached? %>
+            <div class="mb-4">
+              <%= image_tag biometric_proof_image_partner_path(@partner),
+                  alt: "Foto biométrica",
+                  class: "w-full max-w-md border border-gray-300 rounded-md" %>
+            </div>
+          <% else %>
+            <p class="text-gray-500 mb-4">Nenhuma foto biométrica cadastrada.</p>
+          <% end %>
+
+          <!-- Camera Capture Section (hidden when image exists) -->
+          <% unless @partner.biometric_proof_image.attached? %>
+            <div class="camera-section mb-4">
+              <div data-camera-target="cameraSection" style="display: none;">
+                <div class="flex gap-4">
+                  <div class="camera flex-1">
+                    <video data-camera-target="video" data-action="canplay->camera#videoCanPlay" class="w-full border border-gray-300 rounded-md" style="display: none;">Video stream not available.</video>
+                    <%= link_to "Capturar Foto", "#", data: { camera_target: "startButton", turbo: false }, "data-action": "click->camera#capture", class: "mt-2 bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition", style: "display: none;" %>
+                    <%= link_to "Permitir Câmera", "#", data: { camera_target: "allowButton", turbo: false }, "data-action": "click->camera#requestCamera", class: "mt-2 bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition" %>
+                  </div>
+
+                  <div class="output flex-1">
+                    <img data-camera-target="photo" src="" alt="A captura aparecerá aqui." class="w-full border border-gray-300 rounded-md" style="display: none;" />
+                    <canvas data-camera-target="canvas" style="display: none;"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex gap-2">
+            <% if @partner.biometric_proof_image.attached? %>
+              <%= link_to "Remover Biometria",
+                  biometric_proof_image_partner_path(@partner),
+                  method: :delete,
+                  class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+            <% else %>
+              <%= link_to "Capturar Biometria", "#", data: { camera_target: "captureButton", turbo: false }, "data-action": "click->camera#showCameraSection", class: "bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition" %>
+              <%= link_to "Salvar Foto", "#", data: { camera_target: "submitButton", submit_url: biometric_proof_images_partner_path(@partner), turbo: false }, "data-action": "click->camera#submitCapture", class: "bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition", style: "display: none;" %>
+            <% end %>
+          </div>
+        </div>
       </div>
 
       <div class="mt-6 flex justify-between">
@@ -72,3 +119,4 @@
     </div>
   </div>
 </div>
+

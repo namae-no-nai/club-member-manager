@@ -6,17 +6,17 @@ class PartnersController < ApplicationController
     if params[:file].present?
       partners = CsvToPartnerService.new(params[:file]).process
       valid_partners = partners.select(&:valid?)
-  
+
       if valid_partners.any?
         valid_partners.each(&:save)
         redirect_to root_path,
           notice: "#{valid_partners.count} sócios criados com sucesso."
       else
-        flash.now[:alert] = 'Nenhum parceiro válido encontrado no CSV.'
+        flash.now[:alert] = "Nenhum parceiro válido encontrado no CSV."
         render :bulk
       end
     else
-      flash.now[:alert] = 'Envie um arquivo CSV.'
+      flash.now[:alert] = "Envie um arquivo CSV."
       render :bulk
     end
   end
@@ -42,7 +42,7 @@ class PartnersController < ApplicationController
   def update
     @partner = Partner.find(params[:id])
     if @partner.update(partner_params)
-      redirect_to last_records_path, notice: 'Sócio atualizado com sucesso.'
+      redirect_to last_records_path, notice: "Sócio atualizado com sucesso."
     else
       render :edit, status: :unprocessable_entity
     end
