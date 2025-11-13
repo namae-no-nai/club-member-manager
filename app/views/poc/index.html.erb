@@ -1,14 +1,17 @@
 <div class="flex justify-center items-center min-h-screen">
   <div class="w-full max-w-2xl">
     <div class="text-center mb-6">
-      <h1 class="text-3xl font-bold text-red-600">Verificar Praticante</h1>
+      <h1 class="text-3xl font-bold text-red-600">Verificar Sócio</h1>
     </div>
 
     <%= form_with(url: verify_poc_index_path, method: :post, local: true, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
       <div class="grid grid-cols-1 gap-4">
         <div>
-          <%= form.label :partner_id, 'Praticante', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :partner_id, Partner.all, :id, :friendly_name, { prompt: "Selecione um praticante" }, { class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" } %>
+          <%= form.label :partner_id, 'Sócio', class: "block text-sm font-medium text-gray-700" %>
+          
+          <div data-controller="searchable-select">
+            <%= form.collection_select :partner_id, Partner.all, :id, :friendly_name, { prompt: "selecione" }, { data: { searchable_select_target: "select" } } %>
+          </div>
         </div>
 
         <!-- Camera Capture Section -->

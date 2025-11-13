@@ -18,14 +18,14 @@ class PocController < ApplicationController
     if @partner.save
       redirect_to edit_partner_path(@partner)
     else
-      flash[:alert] = "Erro ao registrar praticante: #{@partner.errors.full_messages.join(', ')}"
+      flash[:alert] = "Erro ao registrar sócio: #{@partner.errors.full_messages.join(', ')}"
       redirect_to new_poc_path
     end
 
   rescue => e
     Rails.logger.error("PocController#create error: #{e.class}: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
-    flash[:alert] = "Erro ao tentar registrar praticante: #{e.message}"
+    flash[:alert] = "Erro ao tentar registrar sócio: #{e.message}"
     redirect_to new_poc_path
   end
 
@@ -49,7 +49,7 @@ class PocController < ApplicationController
     end
 
     redirect_to edit_partner_path(@partner)
-  rescue => e
+  rescue StandardError => e
     Rails.logger.error("PocController#show error: #{e.class}: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n")) if e.backtrace
     flash[:alert] = "Erro ao processar verificação biométrica: #{e.message}"
