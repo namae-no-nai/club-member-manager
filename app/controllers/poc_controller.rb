@@ -42,8 +42,6 @@ class PocController < ApplicationController
       active_storage_image: @partner.biometric_proof_image
     ).call
 
-    debugger
-
     # Check if verification result has an error
     if @verification_result[:error].present?
       flash[:alert] = "Erro na verificação biométrica: #{@verification_result[:error]}"

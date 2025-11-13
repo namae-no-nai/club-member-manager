@@ -48,19 +48,6 @@ class PartnersController < ApplicationController
     end
   end
 
-  def biometric_proof_image
-    @partner = Partner.find(params[:id])
-
-    if @partner.biometric_proof_image.attached?
-      send_data @partner.biometric_proof_image.download,
-                type: @partner.biometric_proof_image.content_type,
-                filename: @partner.biometric_proof_image.filename.to_s,
-                disposition: params[:disposition] || "inline"
-    else
-      head :not_found
-    end
-  end
-
   private
 
   def partner_params

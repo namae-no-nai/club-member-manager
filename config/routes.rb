@@ -54,7 +54,9 @@ Rails.application.routes.draw do
     end
 
     member do
-      get :biometric_proof_image
+      get "/biometric_proof_images/", to: "biometric_proof_images#show", as: :biometric_proof_image
+      post "/biometric_proof_images/", to: "biometric_proof_images#create", as: :biometric_proof_images
+      delete "/biometric_proof_images/", to: "biometric_proof_images#destroy"
     end
   end
 
