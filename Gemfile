@@ -13,6 +13,7 @@ gem "cpf_cnpj"
 gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
+gem "ffi"
 
 
 gem "tzinfo-data", platforms: %i[ mingw  jruby ]
