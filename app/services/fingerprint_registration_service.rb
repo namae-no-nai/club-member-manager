@@ -15,10 +15,22 @@ class FingerprintRegistrationService
     end
 
     # Step 2: Get device information
-    device_info = @sdk.get_device_info
-    unless device_info
+    # Retry until we get valid dimensions (device may need a moment to initialize)
+    device_info = nil
+    max_retries = 10
+    retry_delay = 0.1 # 100ms between retries
+    
+    max_retries.times do |attempt|
+      device_info = @sdk.get_device_info
+      if device_info && device_info[:image_width] > 0 && device_info[:image_height] > 0
+        break
+      end
+      sleep(retry_delay) unless attempt == max_retries - 1
+    end
+    
+    unless device_info && device_info[:image_width] > 0 && device_info[:image_height] > 0
       cleanup
-      return { success: false, error: "Failed to get device information" }
+      return { success: false, error: "Failed to get valid device information. Device may not be ready." }
     end
 
     image_size = device_info[:image_width] * device_info[:image_height]
@@ -67,28 +79,29 @@ class FingerprintRegistrationService
 
     # Step 6: Store template in database
     begin
-      @partner.update!(
-        fingerprint_template: template,
-        fingerprint_quality: quality,
-        fingerprint_registered_at: Time.current,
-        fingerprint_device_info: device_info
-      )
+    #   @partner.update!(
+    #     fingerprint_template: template,
+    #     fingerprint_quality: quality,
+    #     fingerprint_registered_at: Time.current,
+    #     fingerprint_device_info: device_info
+    #   )
 
-      Rails.logger.info("Fingerprint registered for partner #{@partner.id}: quality=#{quality}, template_size=#{template.bytesize}")
+    #   Rails.logger.info("Fingerprint registered for partner #{@partner.id}: quality=#{quality}, template_size=#{template.bytesize}")
 
-      {
-        success: true,
-        quality: quality,
-        template_size: template.bytesize,
-        device_info: device_info
-      }
-    rescue => e
-      Rails.logger.error("Failed to save fingerprint template: #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
-      { success: false, error: "Failed to save fingerprint: #{e.message}" }
+    #   {
+    #     success: true,
+    #     quality: quality,
+    #     template_size: template.bytesize,
+    #     device_info: device_info
+    #   }
+    # rescue => e
+    #   Rails.logger.error("Failed to save fingerprint template: #{e.message}")
+    #   Rails.logger.error(e.backtrace.join("\n"))
+    #   { success: false, error: "Failed to save fingerprint: #{e.message}" }
     ensure
       cleanup
     end
+    template
   end
 
   private

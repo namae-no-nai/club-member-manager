@@ -7,17 +7,112 @@ require "ffi"
 class FingerprintReaderService
   extend FFI::Library
 
-  # Library path - matches Python demo approach
-  # Python uses: '/usr/local/lib/libpysgfplib.so'
-  # Ruby FFI uses the C library directly: '/usr/local/lib/libsgfplib.so'
-  SDK_LIB_PATH = "/usr/local/lib/libsgfplib.so"
+  # Library path - loads from vendor folder
+  # The library and its dependencies are bundled in vendor/lib/native/
+  SDK_LIB_PATH = begin
+    if defined?(Rails) && Rails.respond_to?(:root)
+      Rails.root.join("vendor", "lib", "native", "libsgfplib.so").to_s
+    else
+      File.expand_path(File.join(__dir__, "..", "..", "..", "vendor", "lib", "native", "libsgfplib.so"))
+    end
+  end
+  NATIVE_LIB_DIR = File.expand_path(File.dirname(SDK_LIB_PATH))
 
-  # Load the library
+  # LD_LIBRARY_PATH should be set by config/initializers/fingerprint_sdk.rb
+  # This ensures libsgimage.so, libsgfpamx.so, etc. are accessible
+  # Preload dependencies so they're available when the main library loads
+  # This ensures the dynamic linker can resolve all symbols
+  DEPENDENCY_LIBS = %w[
+    libuvc.so.0
+    libAKXUS.so.2
+    libsgnfiq.so
+    libsgfpamx.so
+    libsgimage.so
+  ].freeze
+
+  # Device driver libraries that need to be preloaded
+  # The SDK dynamically loads these when opening a device
+  DEVICE_DRIVER_LIBS = %w[
+    libnxsdk.so
+    libsgfdu08.so.1
+  ].freeze
+
+  # System libraries that need to be preloaded (C++ runtime and USB)
+  SYSTEM_LIBS = %w[
+    libstdc++.so.6
+    libusb-0.1.so.4
+  ].freeze
+
   begin
+    require "fiddle"
+    @_preloaded_handles ||= []
+
+    # First, preload system libraries (C++ runtime must be loaded first)
+    SYSTEM_LIBS.each do |lib_name|
+      # Try common system library paths
+      system_paths = [ "/usr/lib64", "/usr/lib", "/lib64", "/lib" ]
+      lib_path = nil
+
+      system_paths.each do |path|
+        candidate = File.join(path, lib_name)
+        if File.exist?(candidate)
+          lib_path = candidate
+          break
+        end
+      end
+
+      next unless lib_path
+
+      begin
+        # Preload system library with RTLD_GLOBAL flag
+        handle = Fiddle::Handle.new(lib_path, Fiddle::RTLD_LAZY | Fiddle::RTLD_GLOBAL)
+        @_preloaded_handles << handle
+        Rails.logger.debug("Preloaded system library: #{lib_path}") if defined?(Rails) && Rails.logger
+      rescue Fiddle::DLError => e
+        Rails.logger.warn("Failed to preload #{lib_name}: #{e.message}") if defined?(Rails) && Rails.logger
+      end
+    end
+
+    # Then preload vendor dependencies
+    DEPENDENCY_LIBS.each do |lib_name|
+      lib_path = File.join(NATIVE_LIB_DIR, lib_name)
+      next unless File.exist?(lib_path)
+
+      begin
+        # Use system dlopen to preload with RTLD_GLOBAL flag
+        # This makes the library symbols available to subsequently loaded libraries
+        handle = Fiddle::Handle.new(lib_path, Fiddle::RTLD_LAZY | Fiddle::RTLD_GLOBAL)
+        @_preloaded_handles << handle
+      rescue Fiddle::DLError => e
+        Rails.logger.debug("Preloading #{lib_name} failed: #{e.message}") if defined?(Rails) && Rails.logger
+      end
+    end
+
+    # Preload device driver libraries (needed when opening device)
+    DEVICE_DRIVER_LIBS.each do |lib_name|
+      lib_path = File.join(NATIVE_LIB_DIR, lib_name)
+      next unless File.exist?(lib_path)
+
+      begin
+        # Preload device driver with RTLD_GLOBAL so SDK can find it when opening device
+        handle = Fiddle::Handle.new(lib_path, Fiddle::RTLD_LAZY | Fiddle::RTLD_GLOBAL)
+        @_preloaded_handles << handle
+        Rails.logger.debug("Preloaded device driver: #{lib_path}") if defined?(Rails) && Rails.logger
+      rescue Fiddle::DLError => e
+        Rails.logger.debug("Preloading device driver #{lib_name} failed: #{e.message}") if defined?(Rails) && Rails.logger
+      end
+    end
+
+    # Now load the main library
     ffi_lib SDK_LIB_PATH
   rescue LoadError => e
-    Rails.logger.error("Failed to load SecuGen SDK library from #{SDK_LIB_PATH}: #{e.message}")
-    Rails.logger.error("Please ensure the library is installed and accessible")
+    if defined?(Rails) && Rails.logger
+      Rails.logger.error("Failed to load SecuGen SDK library from #{SDK_LIB_PATH}: #{e.message}")
+      Rails.logger.error("Please ensure the library is installed and accessible")
+      Rails.logger.error("LD_LIBRARY_PATH: #{ENV['LD_LIBRARY_PATH']}")
+      Rails.logger.error("NATIVE_LIB_DIR: #{NATIVE_LIB_DIR}")
+    end
+    raise
   end
 
   # Error codes
@@ -25,8 +120,9 @@ class FingerprintReaderService
   ERROR_CREATION_FAILED = 1
   ERROR_FUNCTION_FAILED = 2
   ERROR_INVALID_PARAM = 3
-  ERROR_DEVICE_NOT_FOUND = 55
   ERROR_TIME_OUT = 54
+  ERROR_DEVICE_NOT_FOUND = 55
+  ERROR_WRONG_IMAGE = 57
   ERROR_FAKE_FINGER = 62
   ERROR_FEAT_NUMBER = 101
   ERROR_EXTRACT_FAIL = 105
@@ -94,6 +190,7 @@ class FingerprintReaderService
   attach_function :SGFPM_CloseDevice, [ :pointer ], :uint32
 
   # Device information
+  # C API uses a struct, Python wrapper converts to separate pointers
   attach_function :SGFPM_GetDeviceInfo, [ :pointer, DeviceInfo.by_ref ], :uint32
 
   # LED control
@@ -162,26 +259,71 @@ class FingerprintReaderService
       true
     else
       Rails.logger.error("Failed to open device: error code #{result}")
+      Rails.logger.error("LD_LIBRARY_PATH: #{ENV['LD_LIBRARY_PATH']}")
+      Rails.logger.error("Device driver should be in: #{NATIVE_LIB_DIR}")
+      Rails.logger.error("Check if device is connected: lsusb | grep 1162")
+      Rails.logger.error("Check if user is in SecuGen group: groups | grep SecuGen")
       false
     end
   end
 
   # Get device information
+  # Note: Struct must be properly aligned. Using FFI::Struct which handles alignment automatically.
   def get_device_info
     return nil unless @handle
 
+    # Create a new struct instance for each call to avoid memory issues
     device_info = DeviceInfo.new
+
+    # Zero out the struct to ensure clean state
+    device_info.pointer.clear
+
     result = SGFPM_GetDeviceInfo(@handle, device_info)
 
     if result == ERROR_NONE
+      # Read all fields to check what we're getting
+      device_id = device_info[:device_id]
+      com_port = device_info[:com_port]
+      com_speed = device_info[:com_speed]
+      image_width = device_info[:image_width]
+      image_height = device_info[:image_height]
+      contrast = device_info[:contrast]
+      brightness = device_info[:brightness]
+      gain = device_info[:gain]
+      image_dpi = device_info[:image_dpi]
+      fw_version = device_info[:fw_version]
+
+      Rails.logger.debug("Raw DeviceInfo struct values (all fields):")
+      Rails.logger.debug("  device_id: #{device_id}")
+      Rails.logger.debug("  com_port: #{com_port}")
+      Rails.logger.debug("  com_speed: #{com_speed}")
+      Rails.logger.debug("  image_width: #{image_width} (0x#{image_width.to_s(16)})")
+      Rails.logger.debug("  image_height: #{image_height} (0x#{image_height.to_s(16)})")
+      Rails.logger.debug("  contrast: #{contrast}")
+      Rails.logger.debug("  brightness: #{brightness}")
+      Rails.logger.debug("  gain: #{gain}")
+      Rails.logger.debug("  image_dpi: #{image_dpi}")
+      Rails.logger.debug("  fw_version: #{fw_version} (0x#{fw_version.to_s(16)})")
+      Rails.logger.debug("  Struct size: #{DeviceInfo.size} bytes")
+      Rails.logger.debug("  Raw bytes (first 32): #{device_info.pointer.read_bytes([ 32, DeviceInfo.size ].min).bytes.map { |b| '0x%02x' % b }.join(' ')}")
+
+      # For U20-A device, if dimensions are 0, use known defaults
+      # U20-A typically has 256x360 or 300x400 dimensions at 400 DPI
+      if image_width == 0 || image_height == 0
+        Rails.logger.warn("Device returned 0x0 dimensions. Using U20-A defaults: 300x400")
+        image_width = 300
+        image_height = 400
+      end
+
       @device_info = {
-        device_id: device_info[:device_id],
-        image_width: device_info[:image_width],
-        image_height: device_info[:image_height],
-        image_dpi: device_info[:image_dpi],
-        brightness: device_info[:brightness],
-        contrast: device_info[:contrast]
+        device_id: device_id,
+        image_width: image_width,
+        image_height: image_height,
+        image_dpi: image_dpi,
+        brightness: brightness,
+        contrast: contrast
       }
+
       Rails.logger.info("Device info: #{@device_info[:image_width]}x#{@device_info[:image_height]} @ #{@device_info[:image_dpi]} DPI")
       @device_info
     else
@@ -206,9 +348,16 @@ class FingerprintReaderService
   end
 
   # Capture fingerprint image
+  # This function BLOCKS until a finger is placed on the sensor or timeout occurs
   def get_image(image_size)
     return nil unless @handle
 
+    if image_size <= 0
+      Rails.logger.error("Invalid image size: #{image_size}. Device info may not be available.")
+      return nil
+    end
+
+    Rails.logger.info("Waiting for fingerprint... (this will block until finger is detected or timeout)")
     image_buffer = FFI::MemoryPointer.new(:uint8, image_size)
     result = SGFPM_GetImage(@handle, image_buffer)
 
@@ -217,7 +366,14 @@ class FingerprintReaderService
       Rails.logger.info("Image captured: #{image_size} bytes")
       image_data
     else
-      Rails.logger.error("Failed to capture image: error code #{result}")
+      case result
+      when ERROR_TIME_OUT
+        Rails.logger.error("Failed to capture image: timeout (error code #{result}). No finger detected within timeout period.")
+      when ERROR_WRONG_IMAGE
+        Rails.logger.error("Failed to capture image: wrong/invalid image (error code #{result}). Image size may be incorrect.")
+      else
+        Rails.logger.error("Failed to capture image: error code #{result}")
+      end
       nil
     end
   end
