@@ -15,22 +15,10 @@ class FingerprintRegistrationService
     end
 
     # Step 2: Get device information
-    # Retry until we get valid dimensions (device may need a moment to initialize)
-    device_info = nil
-    max_retries = 10
-    retry_delay = 0.1 # 100ms between retries
-    
-    max_retries.times do |attempt|
-      device_info = @sdk.get_device_info
-      if device_info && device_info[:image_width] > 0 && device_info[:image_height] > 0
-        break
-      end
-      sleep(retry_delay) unless attempt == max_retries - 1
-    end
-    
-    unless device_info && device_info[:image_width] > 0 && device_info[:image_height] > 0
+    device_info = @sdk.get_device_info
+    unless device_info
       cleanup
-      return { success: false, error: "Failed to get valid device information. Device may not be ready." }
+      return { success: false, error: "Failed to get device information" }
     end
 
     image_size = device_info[:image_width] * device_info[:image_height]
