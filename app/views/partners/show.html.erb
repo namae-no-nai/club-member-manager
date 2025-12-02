@@ -1,0 +1,99 @@
+<div class="flex justify-center items-center min-h-screen py-8">
+  <div class="w-full max-w-3xl">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-red-600 mb-2">Detalhes do Praticante</h1>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-red-600 px-6 py-4">
+        <h2 class="text-xl font-semibold text-white">Informações Pessoais</h2>
+      </div>
+
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Nome completo</p>
+            <p class="text-lg font-medium text-gray-900"><%= @partner.full_name %></p>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">CPF</p>
+            <p class="text-lg font-medium text-gray-900"><%= @partner.cpf %></p>
+          </div>
+        </div>
+
+        <div class="border-t pt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações de Registro</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">CR</p>
+              <p class="text-lg font-medium text-gray-900"><%= @partner.registry_certificate %></p>
+            </div>
+
+            <div>
+              <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Data de expiração CR</p>
+              <p class="text-lg font-medium text-gray-900">
+                <%= @partner.registry_certificate_expiration_date&.strftime("%d/%m/%Y") || "-" %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t pt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Filiação</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Número de filiação</p>
+              <p class="text-lg font-medium text-gray-900"><%= @partner.filiation_number || "-" %></p>
+            </div>
+
+            <div>
+              <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Data da primeira filiação</p>
+              <p class="text-lg font-medium text-gray-900">
+                <%= @partner.first_filiation_date&.strftime("%d/%m/%Y") || "-" %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <% if @partner.address.present? %>
+          <div class="border-t pt-6">
+            <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Endereço</p>
+            <p class="text-lg font-medium text-gray-900"><%= @partner.address %></p>
+          </div>
+        <% end %>
+
+        <div class="border-t pt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Biometria</h3>
+          <div class="flex items-center gap-3">
+            <% if @partner.fingerprint_verification.present? %>
+              <div class="flex items-center gap-2 text-green-700">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-lg font-medium">Biometria Verificada</span>
+              </div>
+            <% else %>
+              <div class="flex items-center gap-2 text-gray-500">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-lg font-medium">Biometria não cadastrada</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+      <%= link_to "Editar", edit_partner_path(@partner), class: "bg-red-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition text-center font-medium" %>
+      <%= link_to "Criar outro partner", new_partner_path, class: "bg-blue-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-700 transition text-center font-medium" %>
+      <% unless @partner.fingerprint_verification.present? %>
+        <%= link_to "Cadastrar biometria", capture_fingerprint_verification_path(partner_id: @partner.id), method: :post, class: "bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700 transition text-center font-medium" %>
+      <% end %>
+      <%= link_to "Voltar", root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center transition-all font-medium" %>
+    </div>
+  </div>
+</div>
+

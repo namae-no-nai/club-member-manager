@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :partners, only: %i[ new edit update create ] do
+  resources :partners, only: %i[ new edit show update create ] do
     collection do
       get :bulk
       post :csv_create
@@ -47,6 +47,9 @@ Rails.application.routes.draw do
       post :webauthn_create_callback
     end
   end
+
+  post :capture_fingerprint_verification, to: "fingerprint_verifications#capture"
+  post :compare_fingerprint_verification, to: "fingerprint_verifications#compare"
 
   get "/csv/generate", to: "csv#document"
 end
