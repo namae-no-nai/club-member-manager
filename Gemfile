@@ -14,8 +14,10 @@ gem "webauthn"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
+gem "lockbox"
+gem "dotenv-rails"
 
-gem "tzinfo-data", platforms: %i[ mingw  jruby ]
+gem "tzinfo-data", platforms: %i[ mingw jruby ]
 
 gem "solid_cache"
 gem "solid_queue"
