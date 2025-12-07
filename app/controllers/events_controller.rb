@@ -38,12 +38,23 @@ class EventsController < ApplicationController
     return_to_params = { old_practice: @old_practice }
     return_to_params[:partner_id] = @partners.first.id unless @old_practice
     @return_to = new_event_path(return_to_params)
+    @partners_with_fingerprint = @partners.select { |p| p.fingerprint_verification.present? }.map(&:id)
   end
 
   def create
     update_params
     @event = nil
-  
+    @partner = Partner.find_by(id: params[:event][:partner_id])
+
+    if @partner.fingerprint_verification.present?
+      result =Fingerprint::Compare.new(partner: @partner).call
+
+      if result == false
+        redirect_to new_event_path(partner_id: @partner.id), alert: "Biometria não confere"
+        return
+      end
+    end
+
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         @event = Event.new(event_params.merge(practice))
@@ -111,7 +122,7 @@ class EventsController < ApplicationController
 
   def update_params
     params[:practices].each do |practice|
-      if practice[:activity] == 'Outros'
+      if practice[:activity] == "Outros"
         practice[:activity] = practice[:custom_activity]
       end
     end
