@@ -2,13 +2,8 @@
 
 module Fingerprint
   class CompareMultiple
-    def initialize(partner:)
-      @partner = partner
-    end
-
     def call
       @matched_partners = []
-      @current_template = nil
 
       Partner.where.not(fingerprint_verification_ciphertext: nil).find_in_batches(batch_size: 500) do |batch|
         fingerprints = batch.map(&:fingerprint_verification)
@@ -53,7 +48,7 @@ module Fingerprint
 
       payload = {
         templates: fingerprints,
-        captured_template: @current_template
+        probe_template: @current_template
       }.compact
 
       request.body = payload.to_json

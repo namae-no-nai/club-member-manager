@@ -1,0 +1,91 @@
+<div class="flex justify-center items-center min-h-screen" data-controller="fingerprint-search">
+  <div class="w-full max-w-2xl">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-red-600 mb-4">Buscar Sócio pela Biometria</h1>
+      <%= link_to events_path, class: "text-blue-600 hover:text-blue-800 font-medium underline" do %>
+        ← Voltar para o início
+      <% end %>
+    </div>
+
+    <!-- Loading State -->
+    <div data-fingerprint-search-target="loader">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <div class="flex flex-col items-center space-y-6">
+          <!-- Spinner -->
+          <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-red-600"></div>
+          
+          <!-- Loading Message -->
+          <p class="text-xl text-gray-700 font-medium">Esperando a leitura da biometria...</p>
+          <p class="text-sm text-gray-500">Por favor, posicione o dedo no leitor biométrico</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div data-fingerprint-search-target="error" class="hidden">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="w-16 h-16 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2 class="text-xl font-bold text-red-800">Erro na Verificação</h2>
+            <p class="text-sm text-red-700" data-fingerprint-search-target="errorMessage"></p>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <button 
+            data-action="click->fingerprint-search#retry"
+            class="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition">
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results State -->
+    <div data-fingerprint-search-target="noResults" class="hidden">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="w-16 h-16 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2 class="text-xl font-bold text-yellow-800">Nenhum Sócio Encontrado</h2>
+            <p class="text-sm text-yellow-700">Não foi possível encontrar nenhum sócio com essa biometria.</p>
+          </div>
+        </div>
+        <div class="flex justify-center">
+          <button 
+            data-action="click->fingerprint-search#retry"
+            class="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition">
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results State -->
+    <div data-fingerprint-search-target="results" class="hidden">
+      <div class="bg-gray-100 p-6 rounded-lg shadow-md mx-auto" style="max-width: 800px;">
+        <h2 class="text-2xl font-bold text-red-600 mb-6 text-center">
+          Sócios Encontrados
+        </h2>
+        
+        <div data-fingerprint-search-target="resultsList" class="space-y-4 mb-6">
+          <!-- Results will be dynamically inserted here -->
+        </div>
+
+        <div class="flex justify-center">
+          <button 
+            data-action="click->fingerprint-search#retry"
+            class="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition">
+            Nova Busca
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -48,6 +48,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :fingerprint_verifications, only: [ :index ] do
+    collection do
+      post :search
+    end
+  end
+
   post :capture_fingerprint_verification, to: "fingerprint_verifications#capture"
   post :compare_fingerprint_verification, to: "fingerprint_verifications#compare"
 
