@@ -14,12 +14,12 @@
 
       <div>
         <%= f.label :start_date, "Data inicial", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, use_two_digit_numbers: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
       </div>
 
       <div>
         <%= f.label :end_date, "Data Final", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, class: "form-input border-gray-300 rounded-md p-2" %>
+        <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, use_two_digit_numbers: true, class: "form-input border-gray-300 rounded-md p-2" %>
       </div>
 
       <div class="mt-6 flex justify-between items-center">

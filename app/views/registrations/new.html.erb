@@ -34,7 +34,7 @@
 
         <div>
           <%= form.label :registry_certificate_expiration_date, 'Data de expiração CR', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_select :registry_certificate_expiration_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <%= form.date_select :registry_certificate_expiration_date, start_year: 1925, end_year: 2125, use_two_digit_numbers: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
         </div>
         <div>
           <%= form.label :address, 'Endereço', class: "block text-sm font-medium text-gray-700" %>
@@ -46,7 +46,7 @@
         </div>
         <div>
           <%= form.label :first_filiation_date, 'Data da primeira filiação', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <%= form.date_select :first_filiation_date, start_year: 1925, end_year: 2125, use_two_digit_numbers: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
         </div>
       </div>
 
