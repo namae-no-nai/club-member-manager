@@ -4,7 +4,7 @@ Partner.destroy_all
 Weapon.destroy_all
 
 # Create the club partner
-club_partner = Partner.create!(
+club_partner = Partner.find_or_create_by!(
   full_name: 'Interarmas clube de tiro',
   cpf: Faker::IdNumber.brazilian_citizen_number(formatted: true),
   address: 'Alameda Nothmann, nº 1209',
@@ -17,7 +17,7 @@ club_partner = Partner.create!(
 puts "Created club partner: #{club_partner.full_name}"
 
 # Create a weapon for the club partner
-club_weapon = Weapon.create!(
+club_weapon = Weapon.find_or_create_by!(
   partner: club_partner,
   sigma: Faker::Alphanumeric.alphanumeric(number: 10).upcase,
   serial_number: Faker::Alphanumeric.alphanumeric(number: 12).upcase,

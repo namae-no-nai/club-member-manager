@@ -1,5 +1,6 @@
 class Partner < ApplicationRecord
   has_encrypted :fingerprint_verification
+  blind_index :fingerprint_verification
 
   validates :cpf, uniqueness: true
   validate :cpf_must_be_valid

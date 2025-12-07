@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_235458) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_07_035129) do
   create_table "credentials", force: :cascade do |t|
     t.binary "webauthn_id"
     t.string "public_key"
@@ -53,6 +53,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_235458) do
     t.datetime "updated_at", null: false
     t.string "webauthn_id"
     t.text "fingerprint_verification_ciphertext"
+    t.string "fingerprint_verification_bidx"
+    t.index ["fingerprint_verification_bidx"], name: "index_partners_on_fingerprint_verification_bidx"
   end
 
   create_table "weapons", force: :cascade do |t|

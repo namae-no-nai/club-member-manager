@@ -15,6 +15,7 @@ gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
 gem "lockbox"
+gem "blind_index"
 gem "dotenv-rails"
 
 gem "tzinfo-data", platforms: %i[ mingw jruby ]
