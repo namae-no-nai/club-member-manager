@@ -1,36 +1,38 @@
 require 'faker'
 
-Partner.destroy_all
-Weapon.destroy_all
+# Only create the club partner if registry_certificate 66098 is not taken
+unless Partner.exists?(registry_certificate: 66098)
+  # Create the club partner
+  club_partner = Partner.create!(
+    full_name: 'Interarmas clube de tiro',
+    cpf: Faker::IdNumber.brazilian_citizen_number(formatted: true),
+    address: 'Alameda Nothmann, nº 1209',
+    registry_certificate: 66098,
+    registry_certificate_expiration_date: Faker::Date.between(from: Date.today, to: 1.year.from_now),
+    filiation_number: Faker::Number.unique.number(digits: 8),
+    first_filiation_date: Faker::Date.between(from: 5.years.ago, to: Date.today)
+  )
 
-# Create the club partner
-club_partner = Partner.find_or_create_by!(
-  full_name: 'Interarmas clube de tiro',
-  cpf: Faker::IdNumber.brazilian_citizen_number(formatted: true),
-  address: 'Alameda Nothmann, nº 1209',
-  registry_certificate: 66098,
-  registry_certificate_expiration_date: Faker::Date.between(from: Date.today, to: 1.year.from_now),
-  filiation_number: Faker::Number.unique.number(digits: 8),
-  first_filiation_date: Faker::Date.between(from: 5.years.ago, to: Date.today)
-)
+  puts "Created club partner: #{club_partner.full_name}"
 
-puts "Created club partner: #{club_partner.full_name}"
+  # Create a weapon for the club partner
+  club_weapon = Weapon.create!(
+    partner: club_partner,
+    sigma: Faker::Alphanumeric.alphanumeric(number: 10).upcase,
+    serial_number: Faker::Alphanumeric.alphanumeric(number: 12).upcase,
+    weapon_type: :pistola,
+    brand: 'Taurus',
+    caliber: '.40 S&W',
+    model: 'PT 100',
+    action: 'semi-automático',
+    bore_type: :raiada,
+    authorized_use: :permitido
+  )
 
-# Create a weapon for the club partner
-club_weapon = Weapon.find_or_create_by!(
-  partner: club_partner,
-  sigma: Faker::Alphanumeric.alphanumeric(number: 10).upcase,
-  serial_number: Faker::Alphanumeric.alphanumeric(number: 12).upcase,
-  weapon_type: :pistola,
-  brand: 'Taurus',
-  caliber: '.40 S&W',
-  model: 'PT 100',
-  action: 'semi-automático',
-  bore_type: :raiada,
-  authorized_use: :permitido
-)
-
-puts "Created weapon for club: #{club_weapon.friendly_name}"
+  puts "Created weapon for club: #{club_weapon.friendly_name}"
+else
+  puts "Skipped club partner creation - registry_certificate 66098 already exists"
+end
 
 # Create 3 individual partners with 3 weapons each
 weapon_configs = [
