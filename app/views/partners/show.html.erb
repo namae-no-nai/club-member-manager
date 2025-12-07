@@ -1,5 +1,5 @@
-<div class="flex justify-center items-center min-h-screen py-8">
-  <div class="w-full max-w-3xl">
+<div class="flex justify-center items-center min-h-screen">
+  <div class="w-full max-w-2xl mr-8">
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-red-600 mb-2">Detalhes do Praticante</h1>
     </div>
@@ -71,14 +71,17 @@
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
-                <span class="text-lg font-medium">Biometria Verificada</span>
+                <span class="text-lg font-medium">Biometria Cadastrada</span>
               </div>
             <% else %>
-              <div class="flex items-center gap-2 text-gray-500">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                </svg>
-                <span class="text-lg font-medium">Biometria não cadastrada</span>
+              <div class="flex items-center justify-between gap-2 text-gray-500 w-full">
+                <div class="flex items-center gap-2">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-lg font-medium">Biometria não cadastrada</span>
+                </div>
+                <%= link_to "Cadastrar biometria", capture_fingerprint_verification_path(partner_id: @partner.id), method: :post, class: "bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700 transition text-center font-medium" %>
               </div>
             <% end %>
           </div>
@@ -89,10 +92,20 @@
     <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
       <%= link_to "Editar", edit_partner_path(@partner), class: "bg-red-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition text-center font-medium" %>
       <%= link_to "Criar outro partner", new_partner_path, class: "bg-blue-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-blue-700 transition text-center font-medium" %>
-      <% unless @partner.fingerprint_verification.present? %>
-        <%= link_to "Cadastrar biometria", capture_fingerprint_verification_path(partner_id: @partner.id), method: :post, class: "bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700 transition text-center font-medium" %>
-      <% end %>
       <%= link_to "Voltar", root_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center transition-all font-medium" %>
+    </div>
+  </div>
+
+  <div class="w-full max-w-2xl">
+    <div class="min-h-screen bg-gray-100 p-8">
+      <div class="flex space-x-4 border-b-2 border-gray-300 mb-6">
+        <%= link_to "Armas", last_weapons_records_path(partner_id: @partner), data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
+        <%= link_to "Habitualidades", last_events_records_path(partner_id: @partner.id), data: { turbo_frame: "last_records" }, class: "px-4 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent hover:border-blue-400 transition" %>
+      </div>
+
+      <%= turbo_frame_tag "last_records" do %>
+        <p class="text-gray-500">Selecione uma aba para visualizar os dados.</p>
+      <% end %>
     </div>
   </div>
 </div>
