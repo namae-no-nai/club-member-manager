@@ -6,9 +6,19 @@ class EventsController < ApplicationController
   def filter;end
 
   def generate_pdf
-    @partner = Partner.find_by(
-        registry_certificate: params[:registry_certificate]
-      )
+    # Validate that at least one search field is provided
+    if params[:registry_certificate].blank? && params[:filiation_number].blank?
+      redirect_to(filter_events_path, alert: "Por favor, preencha o Certificado de Registro ou o Número de Filiação")
+      return
+    end
+
+    # Search by registry_certificate or filiation_number
+    @partner = if params[:registry_certificate].present?
+      Partner.find_by(registry_certificate: params[:registry_certificate])
+    else
+      Partner.find_by(filiation_number: params[:filiation_number])
+    end
+
     if @partner.blank?
       redirect_to(filter_events_path, alert: "Praticante não encontrado")
       return
