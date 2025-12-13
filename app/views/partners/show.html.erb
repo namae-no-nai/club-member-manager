@@ -85,7 +85,7 @@
                 </svg>
                 <span class="font-medium">Cadastrada</span>
               </div>
-            <% else %>
+            <% elsif !Rails.application.config.disable_fingerprint_verification.present? %>
               <div class="space-y-3">
                 <div class="flex items-center gap-2 text-orange-600">
                   <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">

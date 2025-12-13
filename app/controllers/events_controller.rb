@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :find_partners, only: [ :new ]
+  before_action :set_disable_fingerprint_verification, only: [ :new, :create ]
 
   def index;end
 
@@ -56,7 +57,7 @@ class EventsController < ApplicationController
     @event = nil
     @partner = Partner.find_by(id: params[:event][:partner_id])
 
-    if @partner.fingerprint_verification.present?
+    if !@disable_fingerprint_verification && @partner.fingerprint_verification.present?
       result =Fingerprint::Compare.new(partner: @partner).call
 
       if result == false
@@ -116,6 +117,10 @@ class EventsController < ApplicationController
   def find_partners
     @partners = Partner.where(id: params[:partner_id]).presence
     @new_practice = @partners.present?
+  end
+
+  def set_disable_fingerprint_verification
+    @disable_fingerprint_verification = Rails.application.config.disable_fingerprint_verification.present?
   end
 
   def update_event_params

@@ -2,7 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
     static values = {
-        partnerIds: Array
+        partnerIds: Array,
+        disableFingerprint: Boolean // Add this new static value
     }
 
     connect() {
@@ -17,6 +18,12 @@ export default class extends Controller {
     }
 
     checkFingerprint(event) {
+        // If fingerprint verification is globally disabled, always hide the notice.
+        if (this.disableFingerprintValue) {
+            this.element.classList.add('hidden');
+            return;
+        }
+
         let selectedPartnerId;
 
         if (event && event.detail && event.detail.partnerId) {

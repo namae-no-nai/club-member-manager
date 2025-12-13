@@ -37,7 +37,8 @@
         <div id="fingerprint-notice"
              class="bg-yellow-50 border-l-4 border-yellow-400 p-4 hidden"
              data-controller="fingerprint-notice"
-             data-fingerprint-notice-partner-ids-value="<%= @partners_with_fingerprint.to_json %>">
+             data-fingerprint-notice-partner-ids-value="<%= @partners_with_fingerprint.to_json %>"
+             data-fingerprint-notice-disable-fingerprint-value="<%= @disable_fingerprint_verification %>">
           <div class="flex">
             <div class="flex-shrink-0">
               <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
