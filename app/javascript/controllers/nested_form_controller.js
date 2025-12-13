@@ -1,10 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static outlets = [ "fingerprintNotice" ]
+
   connect() {
     $('.select2').select2();
     $('.select2.partner-select').on('change', (event) => {
       this.updateWeapons(event);
+
+      const customEvent = new CustomEvent("partner:changed", {
+        detail: { partnerId: event.target.value }
+      });
+      window.dispatchEvent(customEvent);
     });
   }
 

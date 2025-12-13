@@ -6,14 +6,26 @@ export default class extends Controller {
     }
 
     connect() {
+        this.boundCheckFingerprint = this.checkFingerprint.bind(this)
+        window.addEventListener("partner:changed", this.boundCheckFingerprint);
+
         this.checkFingerprint()
     }
 
-    checkFingerprint() {
-        const partnerSelect = document.querySelector('select[name="event[partner_id]"]')
-        if (!partnerSelect) return
+    disconnect() {
+        window.removeEventListener("partner:changed", this.boundCheckFingerprint);
+    }
 
-        const selectedPartnerId = parseInt(partnerSelect.value)
+    checkFingerprint(event) {
+        let selectedPartnerId;
+
+        if (event && event.detail && event.detail.partnerId) {
+            selectedPartnerId = parseInt(event.detail.partnerId);
+        } else {
+            const partnerSelect = document.querySelector('select[name="event[partner_id]"]')
+            if (!partnerSelect) return
+            selectedPartnerId = parseInt(partnerSelect.value)
+        }
 
         if (selectedPartnerId && this.partnerIdsValue.includes(selectedPartnerId)) {
             this.element.classList.remove('hidden')
@@ -22,4 +34,5 @@ export default class extends Controller {
         }
     }
 }
+
 
