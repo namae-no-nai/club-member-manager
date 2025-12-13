@@ -35,10 +35,14 @@ class EventsController < ApplicationController
       params["[end_date(2i)]"].to_i,
       params["[end_date(3i)]"].to_i
     )
-  @events = Event.includes(:weapon)
-    .where(partner_id: @partner.id, date: start_date..end_date)
-    .order(date: :asc)
-    .group_by(&:weapon)
+
+    @events = Event.find_by_sql([
+      "SELECT * FROM (
+        SELECT RANK() OVER(PARTITION BY weapon_id ORDER BY date ASC) as ranking, * FROM events
+      ) ranked_events
+      WHERE partner_id = ? AND date BETWEEN ? AND ?",
+      @partner.id, start_date, end_date
+    ]).group_by(&:weapon)
   end
 
   def new
