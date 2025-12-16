@@ -29,7 +29,7 @@
 
         <div>
           <%= form.label :date, 'Data', class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_select :date, start_year: 1925, end_year: 2125, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+          <%= form.date_select :date, start_year: 1925, end_year: 2125, use_two_digit_numbers: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
         </div>
 
         <div>
@@ -48,8 +48,9 @@
         </div>
       </div>
 
-      <div class="mt-6 flex justify-between">
-        <%= form.submit "Salvar Alterações", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
+      <div class="mt-6 flex justify-between items-center">
+        <%= form.submit "Salvar Alterações", class: "bg-blue-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-700 transition" %>
+        <%= link_to "Deletar", event_path(@event), method: :delete, data: { confirm: "Tem certeza?", turbo: false }, class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
         <%= link_to 'Cancelar', events_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center ml-4 transition-all" %>
       </div>
     <% end %>

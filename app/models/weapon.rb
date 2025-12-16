@@ -21,7 +21,7 @@ class Weapon < ApplicationRecord
     permitido: 0,
     restrito: 1
   }
-  
+
   validates :partner_id, :sigma, :serial_number, :weapon_type, :brand, :caliber,
             :model, :action, :bore_type, :authorized_use, presence: true
 
@@ -29,8 +29,12 @@ class Weapon < ApplicationRecord
   belongs_to :partner
 
   scope :available, ->(partner) {
-    where(partner_id: [partner.id, Partner.club.id])
+    club_id = Partner.club&.id
+    partner_id = partner&.id
+
+    where(partner_id: [ partner_id, club_id ].compact)
       .where(archived_at: nil)
+      .order(Arel.sql("CASE WHEN partner_id = #{sanitize_sql(club_id)} THEN 1 ELSE 0 END, id"))
   }
 
   scope :active, -> { where(archived_at: nil) }
@@ -40,7 +44,8 @@ class Weapon < ApplicationRecord
   end
 
   def friendly_name
-    "#{weapon_type.humanize} - #{caliber} - #{brand} - #{model}"
+    prefix = partner_id == Partner.club&.id ? "🏛️ [CLUBE] " : ""
+    "#{prefix}#{weapon_type.humanize} - #{caliber} - #{brand} - #{model}"
   end
 
   def self.suggested_actions

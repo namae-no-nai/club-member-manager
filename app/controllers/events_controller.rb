@@ -1,14 +1,25 @@
 class EventsController < ApplicationController
   before_action :find_partners, only: [ :new ]
+  before_action :set_disable_fingerprint_verification, only: [ :new, :create ]
 
   def index;end
 
   def filter;end
 
   def generate_pdf
-    @partner = Partner.find_by(
-        registry_certificate: params[:registry_certificate]
-      )
+    # Validate that at least one search field is provided
+    if params[:registry_certificate].blank? && params[:filiation_number].blank?
+      redirect_to(filter_events_path, alert: "Por favor, preencha o Certificado de Registro ou o Número de Filiação")
+      return
+    end
+
+    # Search by registry_certificate or filiation_number
+    @partner = if params[:registry_certificate].present?
+      Partner.find_by(registry_certificate: params[:registry_certificate])
+    else
+      Partner.find_by(filiation_number: params[:filiation_number])
+    end
+
     if @partner.blank?
       redirect_to(filter_events_path, alert: "Praticante não encontrado")
       return
@@ -24,10 +35,14 @@ class EventsController < ApplicationController
       params["[end_date(2i)]"].to_i,
       params["[end_date(3i)]"].to_i
     )
-  @events = Event.includes(:weapon)
-    .where(partner_id: @partner.id, date: start_date..end_date)
-    .order(date: :asc)
-    .group_by(&:weapon)
+
+    @events = Event.find_by_sql([
+      "SELECT * FROM (
+        SELECT RANK() OVER(PARTITION BY weapon_id ORDER BY date ASC) as ranking, * FROM events
+      ) ranked_events
+      WHERE partner_id = ? AND date BETWEEN ? AND ?",
+      @partner.id, start_date, end_date
+    ]).group_by(&:weapon)
   end
 
   def new
@@ -38,12 +53,23 @@ class EventsController < ApplicationController
     return_to_params = { old_practice: @old_practice }
     return_to_params[:partner_id] = @partners.first.id unless @old_practice
     @return_to = new_event_path(return_to_params)
+    @partners_with_fingerprint = @partners.select { |p| p.fingerprint_verification.present? }.map(&:id)
   end
 
   def create
     update_params
     @event = nil
-  
+    @partner = Partner.find_by(id: params[:event][:partner_id])
+
+    if !@disable_fingerprint_verification && @partner.fingerprint_verification.present?
+      result =Fingerprint::Compare.new(partner: @partner).call
+
+      if result == false
+        redirect_to new_event_path(partner_id: @partner.id), alert: "Biometria não confere"
+        return
+      end
+    end
+
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         @event = Event.new(event_params.merge(practice))
@@ -97,6 +123,10 @@ class EventsController < ApplicationController
     @new_practice = @partners.present?
   end
 
+  def set_disable_fingerprint_verification
+    @disable_fingerprint_verification = Rails.application.config.disable_fingerprint_verification.present?
+  end
+
   def update_event_params
     params.require(:event).permit(
       :partner_id, :date, :weapon_id, :activity, :ammo_amount
@@ -111,7 +141,7 @@ class EventsController < ApplicationController
 
   def update_params
     params[:practices].each do |practice|
-      if practice[:activity] == 'Outros'
+      if practice[:activity] == "Outros"
         practice[:activity] = practice[:custom_activity]
       end
     end

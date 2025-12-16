@@ -24,6 +24,94 @@
   </head>
 
   <body>
+    <% if flash.any? %>
+      <div class="fixed top-4 right-4 z-50 space-y-2" style="max-width: 400px;">
+        <% flash.each do |type, message| %>
+          <% 
+            case type.to_sym
+            when :notice
+              bg_color = "bg-green-100"
+              border_color = "border-green-400"
+              text_color = "text-green-700"
+              icon_color = "text-green-600"
+              icon_path = "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            when :alert, :error
+              bg_color = "bg-red-100"
+              border_color = "border-red-400"
+              text_color = "text-red-700"
+              icon_color = "text-red-600"
+              icon_path = "M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            when :warning
+              bg_color = "bg-yellow-100"
+              border_color = "border-yellow-400"
+              text_color = "text-yellow-700"
+              icon_color = "text-yellow-600"
+              icon_path = "M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            else
+              bg_color = "bg-blue-100"
+              border_color = "border-blue-400"
+              text_color = "text-blue-700"
+              icon_color = "text-blue-600"
+              icon_path = "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            end
+          %>
+          
+          <div class="<%= bg_color %> border <%= border_color %> <%= text_color %> px-4 py-3 rounded-md shadow-lg relative animate-fade-in" role="alert">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 <%= icon_color %>" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="<%= icon_path %>" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <div class="ml-3 flex-1">
+                <p class="text-sm font-medium"><%= message %></p>
+              </div>
+              <button 
+                onclick="this.parentElement.parentElement.remove()" 
+                class="ml-3 flex-shrink-0 <%= text_color %> hover:opacity-75 transition"
+                aria-label="Fechar">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <style>
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      </style>
+      
+      <script>
+        // Auto-dismiss flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+          const flashMessages = document.querySelectorAll('[role="alert"]');
+          flashMessages.forEach(function(message) {
+            setTimeout(function() {
+              message.style.transition = 'opacity 0.5s ease-out';
+              message.style.opacity = '0';
+              setTimeout(function() {
+                message.remove();
+              }, 500);
+            }, 5000);
+          });
+        });
+      </script>
+    <% end %>
+
     <main>
       <%= yield %>
     </main>

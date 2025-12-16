@@ -5,25 +5,34 @@
         url: generate_pdf_events_path,
         method: :get,
         local: true,
-        html: { target: "_blank" },
+        html: { target: "_blank", onsubmit: "handlePdfFormSubmit(event)" },
         class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4") do |f| %>
-      <div>
-        <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :registry_certificate, required: true, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Insira o certificado de registro" %>
-      </div>
-      <% if flash[:alert] %>
-        <div class="alert alert-danger">
-          <%= flash[:alert] %>
+      <div class="grid grid-cols-[1fr_auto_1fr] gap-4 items-end">
+        <div>
+          <%= f.label :registry_certificate, "Certificado de Registro", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :registry_certificate, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Ex: 66098" %>
         </div>
-    <% end %>
+        
+        <div class="text-center pb-2 font-semibold text-gray-600">
+          OU
+        </div>
+        
+        <div>
+          <%= f.label :filiation_number, "Número de Filiação", class: "block text-sm font-medium text-gray-700" %>
+          <%= f.text_field :filiation_number, class: "form-input w-full mt-1 p-2 border rounded-md bg-gray-200 text-gray-700", placeholder: "Ex: 12345678" %>
+        </div>
+      </div>
+      
+      <p class="text-xs text-gray-500 italic">* Preencha um dos campos acima para buscar o sócio</p>
+
       <div>
         <%= f.label :start_date, "Data inicial", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
+        <%= f.date_select :start_date, start_year: 1925, end_year: 2125, required: true, use_two_digit_numbers: true, class: "form-input w-full mt-1 p-2 border rounded-md" %>
       </div>
 
       <div>
         <%= f.label :end_date, "Data Final", class: "block text-sm font-medium text-gray-700" %>
-        <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, class: "form-input border-gray-300 rounded-md p-2" %>
+        <%= f.date_select :end_date, start_year: 1925, end_year: 2125, required: true, use_two_digit_numbers: true, class: "form-input border-gray-300 rounded-md p-2" %>
       </div>
 
       <div class="mt-6 flex justify-between items-center">
@@ -34,4 +43,24 @@
   </div>
 </div>
 
-
+<script>
+  function handlePdfFormSubmit(event) {
+    // Validate that at least one search field is filled
+    const registryCertificate = document.querySelector('input[name="registry_certificate"]').value;
+    const filiationNumber = document.querySelector('input[name="filiation_number"]').value;
+    
+    if (!registryCertificate && !filiationNumber) {
+      event.preventDefault();
+      alert('Por favor, preencha o Certificado de Registro ou o Número de Filiação');
+      return false;
+    }
+    
+    // Let the form submit normally (opens PDF in new tab)
+    // Then refresh current page after a short delay
+    setTimeout(() => {
+      window.location.href = '<%= filter_events_path %>';
+    }, 1000);
+    
+    return true;
+  }
+</script>
