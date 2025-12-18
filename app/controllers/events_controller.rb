@@ -61,15 +61,6 @@ class EventsController < ApplicationController
     @event = nil
     @partner = Partner.find_by(id: params[:event][:partner_id])
 
-    if !@disable_fingerprint_verification && @partner.fingerprint_verification.present?
-      result =Fingerprint::Compare.new(partner: @partner).call
-
-      if result == false
-        redirect_to new_event_path(partner_id: @partner.id), alert: "Biometria não confere"
-        return
-      end
-    end
-
     ActiveRecord::Base.transaction do
       practices_params.each do |practice|
         @event = Event.new(event_params.merge(practice))
