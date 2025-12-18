@@ -84,6 +84,8 @@
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
                 <span class="font-medium">Cadastrada</span>
+                <%= link_to "⚠️ Remover Biometria", fingerprint_verification_path(partner_id: @partner.id), method: :delete, data: { confirm: "Tem certeza que deseja deletar a biometria?", turbo: false }, class: "bg-yellow-200 px-4 py-2 text-black rounded-md shadow-md hover:bg-yellow-300 transition" %>
+
               </div>
             <% elsif !Rails.application.config.disable_fingerprint_verification.present? %>
               <div class="space-y-3">

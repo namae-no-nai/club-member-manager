@@ -27,6 +27,18 @@ class FingerprintVerificationsController < ApplicationController
     end
   end
 
+  def destroy
+    @partner = Partner.find params[:partner_id]
+    @partner.update!(fingerprint_verification: nil)
+
+    flash.now[:notice] = "Biometria deletada com sucesso."
+    redirect_to partner_path(@partner), notice: "Biometria deletada com sucesso."
+  rescue StandardError => e
+    Rails.logger.error("Erro ao deletar biometria: #{e.message}")
+    flash.now[:alert] = "Erro ao deletar biometria."
+    redirect_to partner_path(@partner)
+  end
+
   def capture
     @partner = Partner.find params[:partner_id]
     @fingerprint_verification = Fingerprint::Capture.new(partner: @partner).call

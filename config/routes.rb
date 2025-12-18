@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :fingerprint_verifications, only: [ :index ] do
+  resources :fingerprint_verifications, only: [ :index, :destroy ] do
     collection do
       post :search
     end
