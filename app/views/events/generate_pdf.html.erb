@@ -74,9 +74,9 @@
           <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Qtd. Munição</h5></td>
           <td class="border border-gray-400 px-2 py-1"><h5 class="font-bold text-center">Tipo de Evento Treinamento ou Competição</h5></td>
         </tr>
-        <% events.each_with_index do |event| %>
+        <% events.each_with_index do |event, index| %>
           <tr>
-            <td class="border border-gray-400 px-2 py-1 text-center"><%= event.ranking %></td>
+            <td class="border border-gray-400 px-2 py-1 text-center"><%= index + 1 %></td>
             <td class="border border-gray-400 px-2 py-1 text-center"><%= I18n.l(event.date) %></td>
             <td class="border border-gray-400 px-2 py-1 text-center"><%= weapon.sigma %></td>
             <td class="border border-gray-400 px-2 py-1 text-center"><%= event.ammo_amount %></td>
