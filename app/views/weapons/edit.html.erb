@@ -5,6 +5,7 @@
     </div>
 
     <%= form_with(model: @weapon, url: weapon_path(@weapon), method: :patch, local: true, data: { controller: 'credentials', action: "ajax:success->credentials#create ajax:error->credentials#error" }, class: "bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto") do |form| %>
+      <%= hidden_field_tag :partner_id, params[:partner_id] if params[:partner_id].present? %>
       <% if @weapon.errors.any? %>
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
           <strong class="font-bold"><%= pluralize(@weapon.errors.count, "erro") %> impediram o salvamento:</strong>
@@ -91,7 +92,7 @@
           <%= form.submit "Salvar Alterações", class: "bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition" %>
         </div>
         <div class="mt-6 flex justify-end">
-          <%= link_to 'Cancelar', last_records_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center mr-5 transition-all" %>
+          <%= link_to 'Cancelar', params[:partner_id].present? ? partner_path(params[:partner_id]) : last_records_path, class: "text-red-600 hover:bg-red-100 px-6 py-3 border border-red-600 rounded-md text-center mr-5 transition-all" %>
         </div>
       </div>
     <% end %>

@@ -16,7 +16,7 @@
             <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
           </label>
 
-          <%= link_to "Editar", edit_weapon_path(weapon), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
+          <%= link_to "Editar", edit_weapon_path(weapon, partner_id: @partner_id), data: { turbo: false }, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" %>
       </div>
     <% end %>
   </div>
@@ -32,6 +32,7 @@
       <h2 id="modalTitle" class="text-xl font-bold text-gray-900 sm:text-2xl"></h2>
 
       <%= form_with(model: Weapon.new, method: :patch) do |form| %>
+        <%= hidden_field_tag :partner_id, @partner_id %>
         <div class="mt-4">
           <%= form.label :archived_reason, 'Motivo', class: "block text-sm font-medium text-gray-700"  %>
           <%= form.text_field :archived_reason, class: "form-input w-full mt-1 p-2 border rounded-md text-gray-700" %>
@@ -57,7 +58,7 @@
   </div>
 
   <div class="mt-6 flex justify-center">
-    <%= paginate @weapons, theme: 'tailwind', params: { turbo_frame: "last_records" } %>
+    <%= paginate @weapons, theme: 'tailwind', params: { turbo_frame: "last_records", partner_id: @partner_id } %>
   </div>
   <script>
   function openModal(id, event) {

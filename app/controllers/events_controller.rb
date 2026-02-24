@@ -76,7 +76,7 @@ class EventsController < ApplicationController
       end
     end
 
-    redirect_to root_path, notice: "Registros criados com sucesso."
+    redirect_to params[:return_to].presence || root_path, notice: "Registros criados com sucesso."
   end
 
   def edit
@@ -89,7 +89,8 @@ class EventsController < ApplicationController
   def update
     @event = Event.find params[:id]
     if @event.update(update_event_params)
-      redirect_to events_path, notice: "Registro atualizado com sucesso."
+      redirect_path = params[:partner_id].present? ? partner_path(params[:partner_id]) : events_path
+      redirect_to redirect_path, notice: "Registro atualizado com sucesso."
     else
       @partner = @event.partner
       @weapons = (@partner&.weapons || []) + (Partner.club&.weapons || [])
@@ -101,8 +102,10 @@ class EventsController < ApplicationController
   def destroy
     @event = Event.find(params[:id])
     @event.destroy
+
     respond_to do |format|
-      format.html { redirect_to last_records_path, notice: "Evento deletado com sucesso." }
+      redirect_path = params[:partner_id].present? ? partner_path(params[:partner_id]) : last_records_path
+      format.html { redirect_to redirect_path, notice: "Evento deletado com sucesso." }
       format.json { head :no_content }
     end
   end

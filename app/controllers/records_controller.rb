@@ -4,6 +4,7 @@ class RecordsController < ApplicationController
 
   def last_events_records
     @events = fetch_filtered_events
+    @partner_id = params[:partner_id]
     render layout: false
   end
 
@@ -11,6 +12,7 @@ class RecordsController < ApplicationController
     @weapons = Weapon.where(partner_id: params[:partner_id])
                      .order(created_at: :desc)
                      .page(params[:page]).per(10)
+    @partner_id = params[:partner_id]
     render layout: false
   end
 

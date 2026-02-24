@@ -43,10 +43,12 @@ class WeaponsController < ApplicationController
     custom_action
     @weapon = Weapon.find params[:id]
     if @weapon.update(weapon_params)
-      flash[:notice] = "Registros criados com sucesso."
-      redirect_to root_path
+      flash[:notice] = "Registro atualizado com sucesso."
+      redirect_path = params[:partner_id].present? ? partner_path(params[:partner_id]) : root_path
+      redirect_to redirect_path
     else
-      render :new
+      @partners = Partner.all
+      render :edit
     end
   end
 
@@ -54,7 +56,11 @@ class WeaponsController < ApplicationController
     @weapon = Weapon.find params[:id]
     @weapon.update(archive_params)
 
-    redirect_to last_weapons_records_path(partner_id: @weapon.partner.id)
+    if params[:partner_id].present?
+      redirect_to partner_path(params[:partner_id]), notice: "Arma atualizada com sucesso."
+    else
+      redirect_to last_weapons_records_path(partner_id: @weapon.partner.id)
+    end
   end
 
   private
